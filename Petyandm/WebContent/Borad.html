@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Board Ajax</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+<body>
+	<header id="header"></header>
+	<div class="container">
+		<div class="jumbotron">
+			<div class="page-header">
+				<h3>
+					Board <small></small>
+				</h3>
+			</div>
+			<!-- 每頁不同的內容從這裡開始 -->
+			<div id="mydiv">
+				<p>Hello This is Word!!!</p>
+			</div>
+			<input type="button" name="" value="修改" id="button1"> <input
+				type="button" value="刪除" id="button2">
+
+			<!-- 每頁不同的內容到這裡結束 -->
+		</div>
+
+		<div id="row"></div>
+
+		<!-- Site footer -->
+		<div id="footer"></div>
+
+	</div>
+	<!-- /container -->
+
+
+	<script src="front_end/js/jquery.js"></script>
+	<script src="front_end/js/bootstrap.min.js"></script>
+	<script src="front_end/js/include-min.js"></script>
+	<script>
+		var but1 = $('#button1');
+		var but2 = $('#button2');
+		var div = $('#mydiv');
+		but1.click(function() {
+			if (this.value == "修改") {
+				//將p改成textarea
+				var p = div.children().filter('p');
+				$('<textarea>').text(p.text()).appendTo(div);
+				p.remove();
+				this.value = '確定';
+				but2.val('取消');
+			} else if (this.value == '確定') {
+				//利用Ajax送到Controller執行修改,並將textarea改回P
+				$.ajax({
+					url : 'Board',
+					data : {
+						action : this.value,
+						text : div.find('textarea').text()
+					},
+					type : 'POST',
+					error : function(xhr) {
+						alert('Ajax request 發生錯誤');
+					},
+					success : function(result) {
+						var textarea = div.children().filter('textarea');
+						$('<p>').text(textarea.text()).appendTo(div);
+						textarea.remove();
+					}
+				});
+				this.value = "修改";
+				but2.val('刪除');
+			}
+		});
+		but2.click(function() {
+			if (this.value == "刪除") {
+				//利用Ajax送到Controller執行刪除
+				$.ajax({
+					url : 'Board',
+					data : {
+						action : this.value,
+						text : div.find('textarea').text()
+					},
+					type : 'POST',
+					error : function(xhr) {
+						alert('Ajax request 發生錯誤');
+					},
+					success : function(result) {
+						var p = div.children().filter('p');
+						p.remove();
+						but1.remove();
+						but2.remove();
+					}
+				});
+			} else if (this.value == "取消") {
+				//將textarea改成p 不做任何事
+				var textarea = div.children().filter('textarea');
+				$('<p>').text(textarea.text()).appendTo(div);
+				textarea.remove();
+				this.value = "刪除";
+
+				but1.val('修改');
+			}
+		});
+	</script>
+
+</body>
+
+</html>
