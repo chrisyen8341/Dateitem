@@ -32,5 +32,5 @@
     } 
 %>
 
-<b>●共<font color=red><%=rowNumber%></font>個約會</b>
+<b><h2>共<font color=red><%=rowNumber%></font>個約會</h2></b>
 

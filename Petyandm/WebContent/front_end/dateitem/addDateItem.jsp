@@ -69,7 +69,11 @@ String tmax = sdf2.format(timemax);
 				<option value="${rest.restNo}" ${(rest.restNo==dateItemVO.restListNo)? 'selected':'' } >${rest.restName}
 			</c:forEach>
 			
-		</select></td></tr>
+		</select>
+		<a class="btn btn-info" href="">
+        	新增一個餐廳
+        </a>
+		</td></tr>
 		
 		
 

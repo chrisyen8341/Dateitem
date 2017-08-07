@@ -7,6 +7,10 @@
 	left:15%;
 }*/
 
+div .glyphicon-search{
+	margin-left:5rem;
+}
+
 .amos li + li:before{
 	content:'|';
 	padding-right: 1em;	

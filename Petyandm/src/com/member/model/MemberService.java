@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
-import com.album.model.Album;
+//import com.album.model.Album;
 import com.pet.model.Pet;
 
 
@@ -151,10 +151,10 @@ public class MemberService {
 		return dao.findPetsByMemNo(memno);
 	}
 	
-	public Set<Album> getAlbumsByMemNo(Integer memno){
-		return dao.findAlbumsByMemNo(memno);
-	}
-	
+//	public Set<Album> getAlbumsByMemNo(Integer memno){
+//		return dao.findAlbumsByMemNo(memno);
+//	}
+//	
 	
 	public List<Member> getMembersByIdName(String search){
 		return dao.findByIdAndName(search);
