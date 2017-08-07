@@ -117,7 +117,7 @@ public class InsertDummyBlob2 {
 		
 		
 	// 約會商品圖片修改
-	int di=4001;
+	int di=4000;
     for (File file : new File("WebContent/DummyImg/dateitem").listFiles()) { 
     	DateItemJDBCDAO dao=new DateItemJDBCDAO();
     	DateItemVO dateItem=dao.findByPk(di++);

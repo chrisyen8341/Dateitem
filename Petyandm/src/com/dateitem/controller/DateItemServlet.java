@@ -148,9 +148,10 @@ public class DateItemServlet extends HttpServlet {
 			}			
 		
 		
-//		    if ("check_time_buyer".equals(action)){
-//				int buyerNo=5007;
-//				
+		    if ("checkTime".equals(action)){
+				String strNo = req.getParameter("dateItemNo");
+				System.out.println(strNo);
+				
 //				
 //				Integer dateItemNo = new Integer(req.getParameter("dateItemNo").trim());
 //				DateItemService dSvc = new DateItemService();
@@ -177,7 +178,7 @@ public class DateItemServlet extends HttpServlet {
 //					}
 //				}
 //		    	
-//		    }
+		    }
 		
 		
             if ("insert".equals(action)) { // 來自addDateItem.jsp的請求  

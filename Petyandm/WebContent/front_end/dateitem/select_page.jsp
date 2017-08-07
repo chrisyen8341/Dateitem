@@ -72,21 +72,23 @@
 			<td>${dateitem.sellerNo}</td>
 			<td>${dateitem.dateItemPrice}</td>
 			<td>${dateitem.restListNo}</td>
-			<td><a id="showPanel" class="btn btn-primary" data-toggle="modal" data-target="#modal-buy">購買</a></td>
+			<td><a class="btn btn-primary checkit" data-toggle="modal" data-target="#modal-buy" >購買</a></td>
+			<td><input id="checkvalue" type="hidden" class="checkvalue" value="${dateitem.dateItemNo}" /></td>
 		</tr>
+
 		
 <div id="modal-buy" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">取消約會預定</h4>
+        <h4 class="modal-title">約會預定</h4>
       </div>
       <div class="modal-body">
         <p>確定預約約會嗎?</p>
       </div>
       <div class="modal-footer">
-        <a type="button" class="btn btn-default" href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}">確認購買</a>
+        <a type="button" class="btn btn-default" href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" >確認購買</a>
         <button type="button" class="btn btn-default" data-dismiss="modal">回上一頁</button>
       </div>
     </div>
@@ -98,7 +100,41 @@
   </c:forEach>
 </table>
 
+<script>
+// function checktime(dateItemNo){
+// 	e.preventDefault();
+// 	alert('in');
+// 	$.ajax
+//     ({
+//         type: "POST",           
+//         data: 'dateItemNo='+dateItemNo+'&action=checkTime' ,
+//         url: 'dateitem.do',
+//    		 success:function(content)
+//     {
+//            alert('ok');          
+//         }   
+        
+//     });
+// }
+$('.checkit').on('click', function(e) {
+	alert('in');
+    $.ajax({
+        url:  'dateitem.do',
+        type: 'POST',
+        data: 'dateItemNo='+$(this).next('.checkvalue').val()+'&action=checkTime',
+//         +$(this).next('td').find('#checkvalue').val()+
+        success: function(html){
+        	alert('success');
+            $('#modal-buy .modal-body p').html('test');
+            $('#modal-buy').modal('show');
+        },
+        error: function(){
+            alert("error");
+        }  
+    });  
+});
 
+</script>
 
 <%@ include file="footer.file"%>
 
