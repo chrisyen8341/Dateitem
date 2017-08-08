@@ -54,21 +54,28 @@
     <option value="3">Option 3</option></select>
 	
   <button class="btn btn-lg btn-warning glyphicon glyphicon-search"> </button>
+  <button class="btn btn-lg btn-default" id="button1" value="showppl" >以主人顯示約會</button>
 
  </span> 
 
  </div>
  
- 
+
   <c:forEach var="dateitem" items="${list}">
           <div class="col-sm-4 ">
             <div class="bg-color">
             <div class="card hovercard">
-                <div class="cardheader" style="background-image:url('<%=request.getContextPath()%>/ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg');">
+                <div class="cardheader" style="background-image:url('ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg');">
+
+                <input  type="hidden" value="${dateitem.sellerNo}">
+                <input class="no1" type="hidden" value="${dateitem.dateItemNo}">
 
                 </div>
                 <div class="avatar">
-                    <img src="<%=request.getContextPath()%>/ImgReader?sellerNo=${dateitem.sellerNo}&action=memImg">
+                	 <input  type="hidden" value="${dateitem.sellerNo}">
+                    <img class="img1" src="ImgReader?sellerNo=${dateitem.sellerNo}&action=memImg">
+                    <input  type="hidden" value="${dateitem.dateItemNo}">
+
                 </div>
                 <div class="info">
                     <div class="title dateDes">
@@ -185,7 +192,93 @@
 
 <%@ include file="footer.file"%>
 
+<script>
+$(document).ready(function(){
+		var but1 = $('#button1');
+		but1.click(function() {
+			if(this.value == 'showppl'){
+			but1.val('showpet');
+			but1.html('以寵物顯示約會')
 
+			
+		
+			$.ajax({
+				url : 'dateitem.do',
+				data : {
+					action : this.value,
+				},
+				type : 'POST',
+				error : function(xhr) {
+					alert('Ajax request 發生錯誤');
+				},
+				success : function(result) {
+// 					alert('sucess1');
+					$('.cardheader').each(function(index){
+// 						$(this).attr('style', "background-image: url("'ImgReader?sellerNo='+$(this).next('input').val()+'&action=memImg'")");
+						$(this).css('background-image','url("ImgReader?sellerNo='+$(this).find('input').val()+'&action=memImg")');
+					});
+					$('.img1').each(function(index){
+						$(this).attr('src','ImgReader?dateItemNo='+$(this).next('input').val()+'&action=dateImg');
+					});
+// 					$('.avatar').find('img').attr('src','ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg');
+				}
+			});
+			this.value = "showpet";
+			
+			}else if(this.value == 'showpet'){
+				but1.val('showppl');
+				but1.html('以主人顯示約會')
+				$.ajax({
+					url : 'dateitem.do',
+					data : {
+						action : this.value,
+					},
+					type : 'POST',
+					error : function(xhr) {
+						alert('Ajax request 發生錯誤');
+					},
+					success : function(result) {
+// 						alert('sucess2');
+						$('.cardheader').each(function(index){
+//	 						$(this).attr('style', "background-image: url("'ImgReader?sellerNo='+$(this).next('input').val()+'&action=memImg'")");
+							$(this).css('background-image','url("ImgReader?dateItemNo='+$(this).find('.no1').val()+'&action=dateImg")');
+						});
+						$('.img1').each(function(index){
+							$(this).attr('src','ImgReader?sellerNo='+$(this).prev('input').val()+'&action=memImg');
+						});
+//	 					$('.avatar').find('img').attr('src','ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg');
+					}
+				});
+				this.value = "showppl";
+			} 
+			
+			
+		});
+});
+// 			else if(this.value = '確定';{
+// 			but2.val('取消');
+// 			$.ajax({
+// 				url : 'Board',
+// 				data : {
+// 					action : this.value,
+//  					text : div.find('textarea').text()
+// 				},
+// 				type : 'POST',
+// 				error : function(xhr) {
+// 					alert('Ajax request 發生錯誤');
+// 				},
+// 				success : function(result) {
+<%-- 					$('.cardheader').css('background-image', '<%=request.getContextPath()%>/ImgReader?sellerNo=${dateitem.sellerNo}&action=memImg'); --%>
+<%-- 					$('.avatar').filter('img').attr('src','<%=request.getContextPath()%>/ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg'); --%>
+					
+// 				}
+// 			});
+// 			this.value = "showpet";
+// 			but2.val('刪除');
+// 		}		
+// 		});
+// });
+</script>
 
 
 

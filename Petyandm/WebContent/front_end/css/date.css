@@ -8,7 +8,8 @@
 }*/
 
 div .glyphicon-search{
-	margin-left:5rem;
+	margin-left:3rem;
+	margin-right:2rem;
 }
 
 .amos li + li:before{

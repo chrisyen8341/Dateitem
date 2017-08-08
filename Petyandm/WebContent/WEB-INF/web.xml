@@ -60,7 +60,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>DateItemImgReader</servlet-name>
-		<url-pattern>/ImgReader</url-pattern>
+		<url-pattern>/front_end/dateitem/ImgReader</url-pattern>
 	</servlet-mapping>
 
 </web-app>
