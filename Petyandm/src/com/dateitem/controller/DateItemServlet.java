@@ -184,12 +184,17 @@ public class DateItemServlet extends HttpServlet {
             if ("insert".equals(action)) { // 來自addDateItem.jsp的請求  
 			
             	List<String> errorMsgs = new LinkedList<String>();
+            
             	// Store this set in the request scope, in case we need to
             	// send the ErrorPage view.
             	req.setAttribute("errorMsgs", errorMsgs);
 
 			try {
 				/***********************1.接收請求參數 - 輸入格式的錯誤處理*************************/
+				
+				if (req.getParameter("time") == null || (req.getParameter("time").trim()).length() == 0) {
+					errorMsgs.add("請選擇時間");
+				}
 				
 				String htmltime = req.getParameter("time");
 				System.out.println(htmltime);
@@ -329,7 +334,14 @@ public class DateItemServlet extends HttpServlet {
 				
 				/***************************其他可能的錯誤處理**********************************/
 			} catch (Exception e) {
-				errorMsgs.add("");
+				HttpSession session = req.getSession();
+				Member member = (Member) session.getAttribute("member");
+				MemberService memSvc = new MemberService();
+				List<Pet> myPetList = new ArrayList<Pet>();
+				myPetList = memSvc.getPetsByMemNo(member.getMemNo());
+				
+				req.setAttribute("myPetList", myPetList);
+				errorMsgs.add("請輸入完整商品資訊");
 				RequestDispatcher failureView = req
 						.getRequestDispatcher("/front_end/dateitem/addDateItem.jsp");
 				failureView.forward(req, res);
@@ -369,6 +381,18 @@ public class DateItemServlet extends HttpServlet {
 	}
 	
 	//將Html5 date轉為Timestamp的Method
+	
+//	public Timestamp getTimestamp(String dateStr){	
+//		int yyyy= Integer.parseInt((dateStr.substring(0, 4)));
+//		int mm= Integer.parseInt((dateStr.substring(5, 7)));
+//		int dd= Integer.parseInt((dateStr.substring(8, 10)));
+//		int hh= Integer.parseInt((dateStr.substring(11, 13)));
+//		int minute= Integer.parseInt((dateStr.substring(14, 16)));
+//	GregorianCalendar cal = new GregorianCalendar(yyyy,mm-1,dd,hh,minute,0);
+//	java.util.Date ud = cal.getTime();
+//	Timestamp ts= new Timestamp(ud.getTime());
+//	return ts;	
+//	}
 	
 	public Timestamp getTimestamp(String dateStr){	
 		int yyyy= Integer.parseInt((dateStr.substring(0, 4)));

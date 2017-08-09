@@ -7,6 +7,13 @@
 	left:15%;
 }*/
 
+
+
+div>span{
+	margin-top:2rem;
+}
+
+
 div .glyphicon-search{
 	margin-left:3rem;
 	margin-right:2rem;

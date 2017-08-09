@@ -75,7 +75,7 @@
                 	 <input  type="hidden" value="${dateitem.sellerNo}">
                     <img class="img1" src="ImgReader?sellerNo=${dateitem.sellerNo}&action=memImg">
                     <input  type="hidden" value="${dateitem.dateItemNo}">
-   l
+  
                 </div>
                 <div class="info">
                     <div class="title dateDes">
