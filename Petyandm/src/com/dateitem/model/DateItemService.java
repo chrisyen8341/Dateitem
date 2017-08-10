@@ -128,7 +128,7 @@ public class DateItemService {
 	
 	//將日期改為前端約會商品的顯示模式
 	public String getTimeForItem(Timestamp ts){
-	SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH'點'mm分");
+	SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd HH'點'mm分");
 	String timeStr = sdf.format(ts);
 	return timeStr;
 	}

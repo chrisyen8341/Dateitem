@@ -82,9 +82,10 @@ pageContext.setAttribute("rests", rests);
 <%-- 			 value="${param.sellerno}"/></td> --%>
 <!-- 	</tr> -->
 <div class="row">
-<div class="col-sm-offset-1 col-sm-7">
 
-	<form>
+
+<form>
+<div class=" col-sm-5">
   <div class="form-group">
     <label for="lb1">選擇寵物圖片</label>
     <input id="lb1" type="file" class="file" name="dateItemImg" data-show-upload="false" data-show-caption="true">
@@ -123,22 +124,24 @@ pageContext.setAttribute("rests", rests);
 <input class="form-control" type="TEXT" name="dateItemPrice" size="45"
 			value="<%= (dateItemVO==null)? "" : dateItemVO.getDateItemPrice()%>" />
   </div>
-   <br>
+    </div>
+ <div class="col-sm-offset-1 col-sm-5"> 
   
   <div class="form-group">
     <label for="lb5">請輸入約會標題</label>
 <input class="form-control" type="TEXT" name="dateItemTitle" size="45"
 			value="<%= (dateItemVO==null)? "" : dateItemVO.getDateItemTitle()%>" />
   </div>
-   <br>
-  
+ 
+<br>
   <div class="form-group">
     <label for="exampleInputFile">約會內容描述</label>
     <input class="form-control" type="text" name="dateItemText" size="45"
 			value="<%= (dateItemVO==null)? "" : dateItemVO.getDateItemText()%>" />
     <small id="fileHelp" class="form-text text-muted">越充實的內容越容易約會成功喔.</small>
   </div>
-   <br>
+
+  
    <div class="form-group">
     <label for="exampleInputFile">設定約會時間</label>
   <input class="form-control" type="text" id="dp" name="time"> </td></tr>
@@ -161,12 +164,12 @@ pageContext.setAttribute("rests", rests);
  	 <option value="true">有</option>
 	</select> </div>
 	<br>
-
+<br>
   <button type="submit" class="btn btn-primary">上架商品</button>
-</form>
+
 </div>	
 </div>	
-	
+</form>	
 
 
 								<!-- Add photo MODAL -->

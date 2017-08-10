@@ -6,15 +6,33 @@
 <%@ page import="com.member.model.*" %>
 <%@ page import="java.util.*"%>
 
+<style>
+blockquote>p {
+position:relative;
+left:1rem;
+padding-right:4rem;
+}
+
+
+
+
+</style>
+
 <%@ include file="header.file"%>
+
+
 
 
 <jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />
 <jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
+<jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
+<jsp:useBean id = "pSvc" scope="page" class="com.pet.model.PetService"/>
 <%
+	Member member = (Member) session.getAttribute("member");
     List<DateItemVO> list = dSvc.getAllItems();
     pageContext.setAttribute("list",list);
 %>
+
 
 
 
@@ -79,14 +97,14 @@
                 </div>
                 <div class="info">
                     <div class="title dateDes">
-                        <a class="dateDes" target="_blank" href="http://scripteden.com/">${dateitem.dateItemTitle}</a>
+                        <a class="dateDes" target="_blank" href="">${dateitem.dateItemTitle}</a>
                     </div>
                     <div class="desc">${memSvc.getOneMember(dateitem.sellerNo).getMemSname()}</div>
                     <div class="desc">${dSvc.getTimeForItem(dateitem.dateMeetingTime)}</div>
                     <div class="desc">${dateitem.dateItemLocate}</div>
                 </div>
                 <div class="bottom">
-                    <a class="btn btn-info" href="">
+                    <a class="btn btn-info"  data-toggle="modal" data-target="#modal-detail${dateitem.dateItemNo}" href="">
                         詳情
                     </a>
                 </div>
@@ -95,104 +113,87 @@
 
         </div>
  
+<!--  商品明細的跳窗 -->
+
+<div id="modal-detail${dateitem.dateItemNo}" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+    
+    
+      <div class="modal-header">
+  
+  <div class ="main-container">
+
+<div class=" highlight">
+<h1><b>${dateitem.dateItemTitle}</b></h1>
+	<div class="row">
+  
+  
+  
+		<div id="cc">
+        <img id="memphoto-detail${dateitem.dateItemNo}"src ="ImgReader?sellerNo=${dateitem.sellerNo}&action=memImg" />
+      
+        </div>
+        <ul>
+        
+        
+            <li> <h2><a href="" style="color:white;">
+            ${memSvc.getOneMember(dateitem.sellerNo).getMemSname()} && ${pSvc.getOnePet(dateitem.petNo).getPetName()}
+            </a></h2></li>
+            <li>餐廳:${restSvc.getOneRest(dateitem.restListNo).getRestName()} - 所在地:<a href="" class="btn btn-xs btn-basic">看地圖</a></li>
+            <li>${dSvc.getTimeForItem(dateitem.dateMeetingTime)}</li>
+            <li>參加人數上限:${dateitem.dateItemPeople}人  - 
+            	寵物主人攜伴:
+            	<c:if test="${dateitem.hasMate==true}">有</c:if>
+            	<c:if test="${dateitem.hasMate==false}">沒有</c:if>           	
+            	</li>
+            <li><h3 class="cost"><span class="glyphicon glyphicon-usd"></span> ${dateitem.dateItemPrice} </h3></li>
+           
+        </ul>
+        
+        <div class="row">
+        <blockquote >
+		<p >${dateitem.dateItemText}</p>
+		<footer>
+<%-- 		 <cite>人氣:${dateitem.dateItemViewer}</cite> --%>
+		</footer>
+		</blockquote>
+        
+        </div>
+        </div>
+        <button class = "btn btn-warning" data-dismiss="modal">回上一頁</button>
+        
+<!--         //限制自己不能買自己的約會 -->
+       <a href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" type=" button" class="check btn btn-primary"
+       <c:if test="${dateitem.sellerNo==member.getMemNo()}">disabled</c:if>
+       >預定約會</a>
+        
+    </div>
+    
+    <BR>
+	</div>
+</div>
+</div>
+      </div>
+    </div>
+
+ 
+ 
+ 
+ 
+ 
+ 
  </c:forEach>       
   
   
   
-<!--   <table class="table text-align:center"> -->
-<!-- 	<tr> -->
-<!-- 		<th align="center">圖片</th> -->
-<!-- 		<th align="center">暱稱</th> -->
-<!-- 		<th align="center">編號</th> -->
-<!-- 		<th align="center">時間</th> -->
-<!-- 		<th align="center">賣家</th> -->
-<!-- 		<th align="center">價格</th> -->
-<!-- 		<th align="center">餐廳</th> -->
-<!-- 	</tr> -->
-	
-<%-- <c:forEach var="dateitem" items="${list}"> --%>
-<!-- 	<tr align='center' valign='middle'> -->
-<%-- 		<td><img id="allitemsimg" src="<%=request.getContextPath()%>/ImgReader?dateitemNo=${dateitem.dateItemNo}"></td> --%>
-<%-- 			<td>${memSvc.getOneMember(dateitem.sellerNo).getMemSname()}</td> --%>
-<%-- 			<td>${dateitem.dateItemNo}</td> --%>
-<%-- 			<td>${dSvc.getTimeForItem(dateitem.dateMeetingTime)}</td> --%>
-<%-- 			<td>${dateitem.sellerNo}</td> --%>
-<%-- 			<td>${dateitem.dateItemPrice}</td> --%>
-<%-- 			<td>${dateitem.restListNo}</td> --%>
-<!-- 			<td><a class="btn btn-primary checkit" data-toggle="modal" data-target="#modal-buy" >購買</a></td> -->
-<%-- 			<td><input id="checkvalue" type="hidden" class="checkvalue" value="${dateitem.dateItemNo}" /></td> --%>
-<!-- 		</tr> -->
-
-		
-<!-- <div id="modal-buy" class="modal fade" role="dialog"> -->
-<!--   <div class="modal-dialog"> -->
-<!--     <div class="modal-content"> -->
-<!--       <div class="modal-header"> -->
-<!--         <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-<!--         <h4 class="modal-title">約會預定</h4> -->
-<!--       </div> -->
-<!--       <div class="modal-body"> -->
-<!--         <p>確定預約約會嗎?</p> -->
-<!--       </div> -->
-<!--       <div class="modal-footer"> -->
-<%--         <a type="button" class="btn btn-default" href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" >確認購買</a> --%>
-<!--         <button type="button" class="btn btn-default" data-dismiss="modal">回上一頁</button> -->
-<!--       </div> -->
-<!--     </div> -->
-
-<!--   </div> -->
-<!-- </div> -->
-
-
-
-
-
-
-
-
-
-<%--   </c:forEach> --%>
-<!-- </table> -->
-
-<!-- <script> -->
-<!-- // function checktime(dateItemNo){ -->
-<!-- // 	e.preventDefault(); -->
-<!-- // 	alert('in'); -->
-<!-- // 	$.ajax -->
-<!-- //     ({ -->
-<!-- //         type: "POST",            -->
-<!-- //         data: 'dateItemNo='+dateItemNo+'&action=checkTime' , -->
-<!-- //         url: 'dateitem.do', -->
-<!-- //    		 success:function(content) -->
-<!-- //     { -->
-<!-- //            alert('ok');           -->
-<!-- //         }    -->
-        
-<!-- //     }); -->
-<!-- // } -->
-<!-- // $('.checkit').on('click', function(e) { -->
-<!-- // 	alert('in'); -->
-<!-- //     $.ajax({ -->
-<!-- //         url:  'dateitem.do', -->
-<!-- //         type: 'POST', -->
-<!-- //         data: 'dateItemNo='+$(this).next('.checkvalue').val()+'&action=checkTime', -->
-<!-- //          +$(this).next('td').find('#checkvalue').val()+ -->
-<!-- //         success: function(html){ -->
-<!-- //         	alert('success'); -->
-<!-- //             $('#modal-buy .modal-body p').html('test'); -->
-<!-- //             $('#modal-buy').modal('show'); -->
-<!-- //         }, -->
-<!-- //         error: function(){ -->
-<!-- //             alert("error"); -->
-<!-- //         }   -->
-<!-- //     });   -->
-<!-- // }); -->
-
-<!-- </script> -->
 
 <%@ include file="footer.file"%>
 
 <script>
+
 $(document).ready(function(){
 		var but1 = $('#button1');
 		but1.click(function() {
@@ -255,29 +256,7 @@ $(document).ready(function(){
 			
 		});
 });
-// 			else if(this.value = '確定';{
-// 			but2.val('取消');
-// 			$.ajax({
-// 				url : 'Board',
-// 				data : {
-// 					action : this.value,
-//  					text : div.find('textarea').text()
-// 				},
-// 				type : 'POST',
-// 				error : function(xhr) {
-// 					alert('Ajax request 發生錯誤');
-// 				},
-// 				success : function(result) {
-<%-- 					$('.cardheader').css('background-image', '<%=request.getContextPath()%>/ImgReader?sellerNo=${dateitem.sellerNo}&action=memImg'); --%>
-<%-- 					$('.avatar').filter('img').attr('src','<%=request.getContextPath()%>/ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg'); --%>
-					
-// 				}
-// 			});
-// 			this.value = "showpet";
-// 			but2.val('刪除');
-// 		}		
-// 		});
-// });
+
 </script>
 
 
