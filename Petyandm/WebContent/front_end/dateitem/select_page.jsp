@@ -72,7 +72,7 @@ padding-right:4rem;
     <option value="3">Option 3</option></select>
 	
   <button class="btn btn-lg btn-warning glyphicon glyphicon-search"> </button>
-  <button class="btn btn-lg btn-default" id="button1" value="showppl" >以主人顯示約會</button>
+  <button class="btn btn-default" id="button1" value="showppl" >以主人顯示約會</button>
 
  </span> 
 
@@ -156,9 +156,9 @@ padding-right:4rem;
         <div class="row">
         <blockquote >
 		<p >${dateitem.dateItemText}</p>
-		<footer>
+<!-- 		<footer> -->
 <%-- 		 <cite>人氣:${dateitem.dateItemViewer}</cite> --%>
-		</footer>
+<!-- 		</footer> -->
 		</blockquote>
         
         </div>
@@ -166,9 +166,8 @@ padding-right:4rem;
         <button class = "btn btn-warning" data-dismiss="modal">回上一頁</button>
         
 <!--         //限制自己不能買自己的約會 -->
-       <a href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" type=" button" class="check btn btn-primary"
-       <c:if test="${dateitem.sellerNo==member.getMemNo()}">disabled</c:if>
-       >預定約會</a>
+       <c:if test="${dateitem.sellerNo!=member.getMemNo()}"> <a href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" 
+       type="button" class="check btn btn-primary">預定約會</a> </c:if>
         
     </div>
     

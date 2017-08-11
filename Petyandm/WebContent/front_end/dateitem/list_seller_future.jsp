@@ -9,6 +9,8 @@
 <%@ include file="header.file"%>
 
 <jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />
+<jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
+<jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
 
 <%
 Member member = (Member) session.getAttribute("member");
@@ -30,38 +32,88 @@ pageContext.setAttribute("list",list);
 <div class="col-xd-12 col-sm-8 col-sm-offset-1 main-page-show">
 
 					<ul class="list-inline amos">
-					<li><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_future.jsp">進行中的約會</a></li>
-					<li><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_onsale.jsp">上架中的約會</a></li>
-					<li><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_history.jsp">過去的約會資料</a></li>
+					<li class="text-sucess"><b><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_future.jsp">進行中的約會</a></b></li>
+					<li class="text-sucess"><b><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_onsale.jsp">上架中的約會</a></b></li>
+					<li class="text-sucess"><b><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_history.jsp">過去的約會資料</a></b></li>
 					</ul>
   
    <c:if test="${empty list}"> 
    <h1>您沒有任何進行中的約會!</h1> 
 <%--    <c:remove var="itemPurchased" scope="request"/> --%>
     </c:if> 
-       <c:if test="${not empty itemcanceled}"> 
-   <h1>您沒有任何進行中的約會!</h1> 
-<%--    <c:remove var="itemPurchased" scope="request"/> --%>
-    </c:if> 
-  
-  
-  <table class="table text-align:center">
-	<tr>
-		<th align="center">編號</th>
-		<th align="center">時間</th>
-		<th align="center">買家</th>
-<th></th>
 
-	</tr>
-<%@ include file="page3.file"%>
-<c:forEach var="dateitem" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
-	<tr align='center' valign='middle'>
-			<td>${dateitem.dateItemNo}</td>
-			<td>${dSvc.getTimeForYMD(dateitem.dateMeetingTime)}</td>
-			<td>${dateitem.buyerNo}</td>
 
-			<td><a class="btn btn-primary" data-toggle="modal" data-target="#modal-cancel" href="#">我要取消</a></td>
-		</tr>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    	
+                        <th>約會</th>
+                        <th></th>
+                        <th>時間</th>
+                        <th class="text-center">餐廳</th>
+                        <th class="text-center"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+				<tobdy>
+	
+<c:forEach var="dateitem" items="${list}" >
+
+<tr>
+                        <td class="col-sm-6">
+                        <div class="media">
+                        
+<!--                         顯示買家資料及照片,call讀圖程式顯示會員照片 -->
+                            <a class="thumbnail pull-left" > <img class="media-object" src="ImgReader?sellerNo=${dateitem.buyerNo}&action=memImg" style="width: 100px; height: 100px;"> </a>
+                            <div class="media-body">
+                                <h4 class="media-heading"><strong>${dateitem.dateItemTitle}</strong></h4>
+                                <h6 class="media-heading"><small> 買家 </small> <a href="#"><small>${memSvc.getOneMember(dateitem.buyerNo).getMemSname()}</small></a></h6>
+                                <span> &nbsp;狀態: </span><span class="text-success"><strong>即將進行</strong></span>
+                            </div>
+                        </div></td>
+                        <td class="col-sm-1 "></td>
+                        <td class="col-sm-1 " style="text-align: center">
+                        ${dSvc.getTimeForItem(dateitem.dateMeetingTime)}
+                        </td>
+                       	
+                        <td class="col-sm-3  text-center"><strong>${restSvc.getOneRest(dateitem.restListNo).getRestName()}</strong></td>
+                        <td class="col-sm-1 ">
+			<td><a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modal-cancel" href="#">我要取消</a></td>
+                        
+                    </tr>
+
+
+
+
+
+
+
+  
+<!--   <table class="table text-align:center"> -->
+<!-- 	<tr> -->
+<!-- 		<th align="center">編號</th> -->
+<!-- 		<th align="center">時間</th> -->
+<!-- 		<th align="center">買家</th> -->
+<!-- <th></th> -->
+
+<!-- 	</tr> -->
+
+<%-- <c:forEach var="dateitem" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>"> --%>
+<!-- 	<tr align='center' valign='middle'> -->
+<%-- 			<td>${dateitem.dateItemNo}</td> --%>
+<%-- 			<td>${dSvc.getTimeForYMD(dateitem.dateMeetingTime)}</td> --%>
+<%-- 			<td>${dateitem.buyerNo}</td> --%>
+
+<!-- 			<td><a class="btn btn-primary" data-toggle="modal" data-target="#modal-cancel" href="#">我要取消</a></td> -->
+<!-- 		</tr> -->
+		
+		
+		
+		
+		
 		
 <!-- ================================================取消按鈕的modal,必須在foreach內=====		 -->
 <div id="modal-cancel" class="modal fade" role="dialog">
@@ -74,7 +126,7 @@ pageContext.setAttribute("list",list);
       <div class="modal-body">
         <p></p>
         <p>確定取消嗎?</p>
-        <p>若取消次數過多將被暫停上架約會喔~</p>
+        <p>若取消次數過多將被暫停取消上架權力~</p>
       </div>
       <div class="modal-footer">
         <a type="button" class="btn btn-default" href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=cancel_date&dateItemNo=${dateitem.dateItemNo}&fromwho=seller">確認取消</a>
@@ -87,10 +139,18 @@ pageContext.setAttribute("list",list);
 <!-- ================================================取消按鈕的modal,必須在foreach內=====		 -->		
   </c:forEach>
   
-  
-  
-</table>
-
+                   <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">共有約會</td>
+                        <td class="text-left"><%=list.size()%>筆</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
 <%@ include file="footer.file"%>

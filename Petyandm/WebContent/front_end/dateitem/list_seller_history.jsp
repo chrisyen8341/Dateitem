@@ -9,6 +9,8 @@
 <%@ include file="header.file"%>
 
 <jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />
+<jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
+<jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
 
 <%
 Member member = (Member) session.getAttribute("member");
@@ -30,9 +32,9 @@ pageContext.setAttribute("list",list);
 <div class="col-xd-12 col-sm-8 col-sm-offset-1 main-page-show">
 
 					<ul class="list-inline amos">
-					<li><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_future.jsp">進行中的約會</a></li>
-					<li><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_onsale.jsp">上架中的約會</a></li>
-					<li><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_history.jsp">過去的約會資料</a></li>
+					<li class="text-sucess"><b><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_future.jsp">進行中的約會</a></b></li>
+					<li class="text-sucess"><b><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_onsale.jsp">上架中的約會</a></b></li>
+					<li class="text-sucess"><b><a href="<%=request.getContextPath() %>/front_end/dateitem/list_seller_history.jsp">過去的約會資料</a></b></li>
 					</ul>
   
    <c:if test="${empty list}"> 
@@ -45,35 +47,62 @@ pageContext.setAttribute("list",list);
   </c:if>
   
   
-  <table class="table text-align:center">
-	<tr>
-		<th align="center">編號</th>
-		<th align="center">時間</th>
-		<th align="center">買家</th>
-<th>交易結果</th>
+     <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                    	
+                        <th>約會</th>
+                        <th></th>
+                        <th>時間</th>
+                        <th class="text-center">餐廳</th>
+                        <th class="text-center"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+				<tobdy>
+	
+<c:forEach var="dateitem" items="${list}" >
 
-	</tr>
-<%@ include file="page3.file"%>
-<c:forEach var="dateitem" items="${list}" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
-	<tr align='center' valign='middle'>
-			<td>${dateitem.dateItemNo}</td>
-			<td>${dSvc.getTimeForYMD(dateitem.dateMeetingTime)}</td>
-			<td>${dateitem.buyerNo}</td>
-			<td><c:if test="${dateitem.dateItemStatus==3}">
-  			交易完成
-			</c:if>
-			<c:if test="${dateitem.dateItemStatus==2}">
-  			交易取消
-			</c:if>
-		</tr>
-			
-  </c:forEach>
-  
-  
-  
-</table>
+<tr>
+                        <td class="col-sm-5">
+                        <div class="media">
+                            <a class="thumbnail pull-left" > <img class="media-object" src="ImgReader?dateItemNo=${dateitem.dateItemNo}&action=dateImg" style="width: 100px; height: 100px;"> </a>
+                            <div class="media-body">
+                                <h4 class="media-heading"><strong>${dateitem.dateItemTitle}</strong></h4>
+                                <h6 class="media-heading"><small> by </small> <a href="#"><small>${memSvc.getOneMember(dateitem.sellerNo).getMemSname()}</small></a></h6>
+                            </div>
+                        </div></td>
+                        <td class="col-sm-1 "></td>
+                        <td class="col-sm-1 " style="text-align: center">
+                        ${dSvc.getTimeForItem(dateitem.dateMeetingTime)}
+                        </td>
+                       	
+                        <td class="col-sm-3  text-center"><strong>${restSvc.getOneRest(dateitem.restListNo).getRestName()}</strong></td>
+                        <td class="col-sm-2 ">
+							<c:if test="${dateitem.dateItemStatus==3}">
+  							<span class="text-success"><small>交易完成</small></span>
+							</c:if>
+							<c:if test="${dateitem.dateItemStatus==2}">
+  							<span class="text-warning"><small>交易取消</small></span>
+							</c:if>
+                        
+                    </tr>
+ </c:forEach>
 
-
+                   <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-center">共有約會</td>
+                        <td class="text-left"><%=list.size()%>筆</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 <%@ include file="footer.file"%>
 

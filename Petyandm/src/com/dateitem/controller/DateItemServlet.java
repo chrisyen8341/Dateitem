@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -47,7 +48,7 @@ public class DateItemServlet extends HttpServlet {
 			Member member = (Member) session.getAttribute("member");
 
 			myPetList = memSvc.getPetsByMemNo(member.getMemNo());
-			System.out.println(myPetList.size());
+			
 			
 			//沒寵物的使用者導到寵物註冊
 			if(myPetList.size()==0){
@@ -85,6 +86,41 @@ public class DateItemServlet extends HttpServlet {
 										
 		}
 		
+		if("checktime".equals(action)){
+			//賣家同一個時間內是已經有上架商品
+				HttpSession session = req.getSession();
+				Member member = (Member) session.getAttribute("member");
+				DateItemService dSvc = new DateItemService();
+				List<DateItemVO> list = dSvc.findBySeller_onsale(member.getMemNo());
+				String timeStr = req.getParameter("time");
+				System.out.println(timeStr);
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				try {
+					Date t1 = sdf.parse(timeStr);
+					System.out.println(t1);
+					
+					for(DateItemVO dateItemVO:list){
+						System.out.println("size"+list.size());
+						System.out.println(dateItemVO.getDateMeetingTime());
+						long diff = t1.getTime()- dateItemVO.getDateMeetingTime().getTime();
+						int diffhour = (int)(diff/(60 * 60 * 1000)) % 24;
+						System.out.println("diff"+diff);
+						System.out.println("hour"+diffhour);
+						if (diffhour<4 && diffhour>-4){			
+							PrintWriter out = res.getWriter();
+							out.print(dSvc.getTimeForItem(dateItemVO.getDateMeetingTime()));
+							
+						}
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Parse Error");
+				}
+		}					
+		
+		
+		
 		//買家購買一個商品
 		if("buy_date".equals(action)){
 		//先跳過檢查儲值的部分
@@ -92,7 +128,7 @@ public class DateItemServlet extends HttpServlet {
 			Member member = (Member) session.getAttribute("member");
 			int buyerNo = member.getMemNo();
 			
-			System.out.println(req.getParameter("dateItemNo"));
+			
 						
 			Integer dateItemNo = new Integer(req.getParameter("dateItemNo").trim());
 			DateItemService dSvc = new DateItemService();
@@ -102,8 +138,7 @@ public class DateItemServlet extends HttpServlet {
 			dateItemVO.setDateItemStatus(1);
 			dateItemVO.setDateItemShow(1);
 			dSvc.updateByVO(dateItemVO);
-			System.out.println(dateItemVO.getBuyerNo());
-			System.out.println(dateItemVO.getDateItemShow());
+			
 			
 			//把剛剛購買的物件setAttribute,並轉購買紀錄檢視
 			req.setAttribute("itemPurchased", dateItemVO);
@@ -117,7 +152,7 @@ public class DateItemServlet extends HttpServlet {
 		if("cancel_date".equals(action)){
 		//先跳過檢查儲值的部分
 			
-			System.out.println(req.getParameter("dateItemNo"));
+			
 						
 			Integer dateItemNo = new Integer(req.getParameter("dateItemNo").trim());
 			DateItemService dSvc = new DateItemService();
@@ -148,37 +183,6 @@ public class DateItemServlet extends HttpServlet {
 			}			
 		
 		
-		    if ("checkTime".equals(action)){
-				String strNo = req.getParameter("dateItemNo");
-				System.out.println(strNo);
-				
-//				
-//				Integer dateItemNo = new Integer(req.getParameter("dateItemNo").trim());
-//				DateItemService dSvc = new DateItemService();
-//				DateItemVO dateItemVO = dSvc.findByPK(dateItemNo);
-//				
-//				List<DateItemVO> historyList = dSvc.findByBuyer_future(dateItemNo);
-//				for (DateItemVO item: historyList){
-//					int count=0;
-//					SimpleDateFormat sdf = new SimpleDateFormat("MMdd");
-//					if(sdf.format(item.getDateMeetingTime()).equals(sdf.format(dateItemVO.getDateMeetingTime()))){
-//						count++;					
-//					}
-//					
-//					if(count>0){
-//						PrintWriter out = res.getWriter();
-//				        out.print("data-toggle=\"modal\" data-target=\"#myModal\"");
-//
-//					}else{
-//
-//						String url = req.getContextPath()+"/front_end/dateitem/dateitem.do?action=buy_date";
-//						RequestDispatcher successView = req.getRequestDispatcher(url);// 成功轉交 update_emp_input.jsp
-//						successView.forward(req, res);
-//						
-//					}
-//				}
-//		    	
-		    }
 		
 		
             if ("insert".equals(action)) { // 來自addDateItem.jsp的請求  
@@ -197,7 +201,7 @@ public class DateItemServlet extends HttpServlet {
 				}
 				
 				String htmltime = req.getParameter("time");
-				System.out.println(htmltime);
+				;
 				
 				Timestamp dateMeetingTime = getTimestamp(htmltime);
 				System.out.println(getTimestamp(htmltime));

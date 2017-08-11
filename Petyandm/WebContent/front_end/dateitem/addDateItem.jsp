@@ -6,8 +6,8 @@
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="com.restaurant.model.*" %>
 <%@ page isELIgnored="false" %>
-<%@ page import="com.restaurant.model.*"%>
 <%@ page import="java.util.List"%>
+<%@ page import="com.member.model.*"%>
 
 <%@ include file="header.file"%>
 
@@ -43,6 +43,16 @@ pageContext.setAttribute("rests", rests);
   </style>
 
 
+<!-- =======檢查上架時間是否重複========= -->
+<jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />     
+<jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
+<%
+Member member = (Member) session.getAttribute("member");
+List<DateItemVO> list = dSvc.findBySeller_history(member.getMemNo());
+pageContext.setAttribute("list",list);
+
+%>
+
 
 <head>
 <title>約會商品上架</title></head>
@@ -76,11 +86,7 @@ pageContext.setAttribute("rests", rests);
 
 <form action="dateitem.do" method=post enctype="multipart/form-data">
 <table class="table">
-<!-- 	<tr> -->
-<!-- 		<td>賣家會員編號:<font color=red><b>*</b></font></td> -->
-<!-- 		<td><input type="TEXT" name="sellerNo" size="45"  -->
-<%-- 			 value="${param.sellerno}"/></td> --%>
-<!-- 	</tr> -->
+
 <div class="row">
 
 
@@ -107,10 +113,10 @@ pageContext.setAttribute("rests", rests);
   <div class="form-group">
   <label for="restListNo">選擇餐廳</label>
   <jsp:useBean id="restSvc" scope="page" class="com.restaurant.model.RestaurantService" />
-   <a class="btn btn-default btn-xs" data-toggle="modal" data-target="#googleMap" href="">
+   <a class="btn btn-default btn-xs" data-toggle="modal" data-target="#googleMap" href="#">
        地圖瀏覽</a>
   <a class="btn btn-default btn-xs" href="">新增餐廳</a>
-  <select class="form-control selectpicker" id="restListNo" size="1" name="restListNo">
+  <select id="restListNo" class="form-control" size="1" name="restListNo">
 			<c:forEach var="rest" items="${restSvc.all}">
 				<option value="${rest.restNo}" ${(rest.restNo==dateItemVO.restListNo)? 'selected':'' }>${rest.restName}
 			</c:forEach>
@@ -165,11 +171,43 @@ pageContext.setAttribute("rests", rests);
 	</select> </div>
 	<br>
 <br>
-  <button type="submit" class="btn btn-primary">上架商品</button>
+                    <a id="godo"class="btn btn-info"  href="">
+                        上架商品
+                    </a>
 
 </div>	
-</div>	
+	
+
+
+
+<!-- 確認時間視窗 -->
+
+		<div id="tryonsale" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">上架商品</h4>
+      </div>
+      <div class="modal-body">
+        <p></p>
+        <h2><p id="textshow">有一筆約會, 請相隔四小時以上</p></h2>
+      </div>
+      <div class="modal-footer">
+        <button id="fortest" type="button" class="btn btn-warning" data-dismiss="modal">回上一頁</button>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+
 </form>	
+</div>
+
+
+
+
 
 
 								<!-- Add photo MODAL -->
@@ -208,24 +246,50 @@ pageContext.setAttribute("rests", rests);
 
 
  <script>
- 	function show1(){
- 		alert($('#dp').val());
- 	}
-//  	function show2(){
-//  		alert($('#dt').val());
-//  	}
- 	
- 	
+ 
+ 
+//  先用ajax檢查是否有重複日期,有的話跳窗提醒,沒有的話送controller進行資料驗證
+ 
+ $(document).ready(function(){
+	 $('#godo').on('click', function(e) {
+		    e.preventDefault();
+		    $.ajax({ 
+		        url:  'dateitem.do?action=checktime',
+		        type: 'POST',
+		        data: { time:$('#dp').val(), 
+				},
+		        success: function(time){
+		       
+		        	if(time.length>2){
+		        	 $('#tryonsale').modal('show');
+	        	$('#textshow').text($('#dp').val()+'這時段已經有約會了,請相隔四小時以上');
+		        	}else{
+		        		
+		        		window.location.href = 'dateitem.do?action=insert';
+		        	}
+		        },
+		        error: function(){
+		            alert("error");
+		        }  
+		    });  	    
+	});    
+ }); 
+
+
+ 
  		
 
 	 $("#dp").datetimepicker({format: 'Y-m-d h:i',
 		 minDate:'+1970/01/02',
+		 allowTimes:[
+'11:00','11:30', '12:00', '12:30','13:00', '13:30','14:00','14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00',
+		  '19:30', '20:00', '21:00', '22:00', '23:00'
+		 ],
 		 defaultDate: '17/09/01',
-		 step: 30 
+//allowTimes 或者step選一個用
+// 		 step: 30 
 		             });
-// 	 rome(dt);
 
- 
 	  
  
   var geocoder;
@@ -343,7 +407,7 @@ pageContext.setAttribute("rests", rests);
   	  function chooseRest(restNo) {
   		  $('#restListNo').val(restNo);
   		$('#googleMap').modal('hide');
-	  }
+	  };
   	  
   	
   	  
