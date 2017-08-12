@@ -23,21 +23,23 @@
     float: left; 
     clear: right
     }
+
+.highlight .a{
+	margin-left: 1%;
+    float: right;
+}
     
 .highlight button {
    margin-left: 1%;
     float: right;
     }
+    
 
 .check{
 	margin-left: 1%;
     float: right;	
 }
 
-.highlight .a{
-	margin-left: 1%;
-    float: right;
-}
 
 .highlight h1,h2,h3,h4,h5,h6 {
     padding-bottom: 2%;

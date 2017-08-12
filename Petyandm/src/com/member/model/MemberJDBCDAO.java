@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.album.model.Album;
+//import com.album.model.Album;
 import com.pet.model.Pet;
 import com.pet.model.PetJDBCDAO;
 
@@ -685,61 +685,61 @@ public class MemberJDBCDAO implements MemberDAO_interface {
 	}
 
 
-	@Override
-	public Set<Album> findAlbumsByMemNo(Integer memno) {
-		PreparedStatement pstmt=null;
-		Connection con=null;
-		ResultSet rs=null;
-		Set<Album> set=new LinkedHashSet<Album>();
-		
-		try{
-			Class.forName(DRIVER);
-			con=DriverManager.getConnection(URL,USER,PASSWORD);
-			pstmt=con.prepareStatement(FIND_ALBUMS_BY_MEMNO);
-			pstmt.setInt(1,memno);
-			while(rs.next()){
-				Album album=new Album();
-				album.setAlbumNo(rs.getInt("albumNo"));
-				album.setMemNo(rs.getInt("memNo"));
-				album.setAlbumTitle(rs.getString("albumTitle"));
-				album.setAlbumCreatedTime(rs.getTimestamp("albumCreatedTime"));
-				album.setAlbumModifiedTime(rs.getTimestamp("albumModifiedTime"));
-				album.setAlbumStatus(rs.getInt("albumStatus"));
-				album.setAlbumImgFile(rs.getBytes("albumImgFile"));
-				set.add(album);
-			}
-		}
-		catch(ClassNotFoundException e){
-			e.printStackTrace();	
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally{
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException se) {
-					se.printStackTrace(System.err);
-				}
-			}
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-			}
-		}
-		
-		return set;
-	}
+//	@Override
+//	public Set<Album> findAlbumsByMemNo(Integer memno) {
+//		PreparedStatement pstmt=null;
+//		Connection con=null;
+//		ResultSet rs=null;
+//		Set<Album> set=new LinkedHashSet<Album>();
+//		
+//		try{
+//			Class.forName(DRIVER);
+//			con=DriverManager.getConnection(URL,USER,PASSWORD);
+//			pstmt=con.prepareStatement(FIND_ALBUMS_BY_MEMNO);
+//			pstmt.setInt(1,memno);
+//			while(rs.next()){
+//				Album album=new Album();
+//				album.setAlbumNo(rs.getInt("albumNo"));
+//				album.setMemNo(rs.getInt("memNo"));
+//				album.setAlbumTitle(rs.getString("albumTitle"));
+//				album.setAlbumCreatedTime(rs.getTimestamp("albumCreatedTime"));
+//				album.setAlbumModifiedTime(rs.getTimestamp("albumModifiedTime"));
+//				album.setAlbumStatus(rs.getInt("albumStatus"));
+//				album.setAlbumImgFile(rs.getBytes("albumImgFile"));
+//				set.add(album);
+//			}
+//		}
+//		catch(ClassNotFoundException e){
+//			e.printStackTrace();	
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		finally{
+//			if (rs != null) {
+//				try {
+//					rs.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (pstmt != null) {
+//				try {
+//					pstmt.close();
+//				} catch (SQLException se) {
+//					se.printStackTrace(System.err);
+//				}
+//			}
+//			if (con != null) {
+//				try {
+//					con.close();
+//				} catch (Exception e) {
+//					e.printStackTrace(System.err);
+//				}
+//			}
+//		}
+//		
+//		return set;
+//	}
 
 }

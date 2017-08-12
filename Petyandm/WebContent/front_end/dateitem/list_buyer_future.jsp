@@ -40,6 +40,10 @@ pageContext.setAttribute("list",list);
    <c:remove var="itemPurchased" scope="request"/>
   </c:if>
   
+    <c:if test="${not empty itemNotFound}">
+  <h1>很抱歉!約會已經搶先一步被人預約, 請選擇其他約會!</h1>
+   <c:remove var="itemPurchased" scope="request"/>
+  </c:if>
 	
 	
 

@@ -36,7 +36,7 @@ public class DateItemServlet extends HttpServlet {
 		res.setContentType("text/html; charset=Big5");
 		String action = req.getParameter("action");
 
-		// 來自select_page.jsp上架約會商品
+		// 檢查是否有寵物
 		if ("check_Seller".equals(action)) { 
 
 			
@@ -65,12 +65,7 @@ public class DateItemServlet extends HttpServlet {
 		
 		//買家檢視已購買但未完成交易的商品
 		if ("list_buyer_future".equals(action)) { // 來自select_page.jsp上架約會商品
-			
-//			DateItemService dSvc = new DateItemService();
-//			List<DateItemVO> futurelist = new ArrayList<DateItemVO>();
-//			futurelist = dSvc.findByBuyer_future(5007);
-//			
-//			req.setAttribute("futurelist", futurelist);         
+			       
 			String url = "/front_end/dateitem/list_buyer_future.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);// 成功轉交 update_emp_input.jsp
 			successView.forward(req, res);
@@ -86,8 +81,27 @@ public class DateItemServlet extends HttpServlet {
 										
 		}
 		
-		if("checktime".equals(action)){
-			//賣家同一個時間內是已經有上架商品
+		if("checkCharge".equals(action)){
+			HttpSession session = req.getSession();
+			Member member = (Member) session.getAttribute("member");
+			DateItemService dSvc = new DateItemService();
+			
+			System.out.println(req.getParameter("dateItemNo"));
+			DateItemVO dateItemVO =dSvc.findByPK(Integer.parseInt(req.getParameter("dateItemNo")));
+			if(member.getMemPoint()< dateItemVO.getDateItemPrice()) {
+				PrintWriter out = res.getWriter();
+				out.print("餘額不足餘額不足");
+			}else{
+				PrintWriter out = res.getWriter();
+				out.print(" ");
+			}
+			
+		}
+		
+		
+		//賣家同一個時間內是已經有上架商品
+		if("checkTime".equals(action)){
+			
 				HttpSession session = req.getSession();
 				Member member = (Member) session.getAttribute("member");
 				DateItemService dSvc = new DateItemService();
@@ -101,8 +115,7 @@ public class DateItemServlet extends HttpServlet {
 					System.out.println(t1);
 					
 					for(DateItemVO dateItemVO:list){
-						System.out.println("size"+list.size());
-						System.out.println(dateItemVO.getDateMeetingTime());
+						//把每個商品跟目前要上架的時間都轉成long比較是否差距四小時
 						long diff = t1.getTime()- dateItemVO.getDateMeetingTime().getTime();
 						int diffhour = (int)(diff/(60 * 60 * 1000)) % 24;
 						System.out.println("diff"+diff);
@@ -123,28 +136,43 @@ public class DateItemServlet extends HttpServlet {
 		
 		//買家購買一個商品
 		if("buy_date".equals(action)){
-		//先跳過檢查儲值的部分
+		//檢查儲值
+			
+			
 			HttpSession session = req.getSession();
 			Member member = (Member) session.getAttribute("member");
 			int buyerNo = member.getMemNo();
-			
-			
+						
 						
 			Integer dateItemNo = new Integer(req.getParameter("dateItemNo").trim());
 			DateItemService dSvc = new DateItemService();
 			DateItemVO dateItemVO = dSvc.findByPK(dateItemNo);
+			
+//			再次檢查該商品是否還沒被購買
+			if(dateItemVO.getDateItemShow()==0&&
+					dateItemVO.getDateItemStatus()==0){
 							
 			dateItemVO.setBuyerNo(buyerNo);
 			dateItemVO.setDateItemStatus(1);
 			dateItemVO.setDateItemShow(1);
 			dSvc.updateByVO(dateItemVO);
 			
-			
+			//扣款
+			int currentPoint = member.getMemPoint();
+			member.setMemPoint(currentPoint-dateItemVO.getDateItemPrice());
+						
 			//把剛剛購買的物件setAttribute,並轉購買紀錄檢視
 			req.setAttribute("itemPurchased", dateItemVO);
 			String url = "/front_end/dateitem/list_buyer_future.jsp";
 			RequestDispatcher successView = req.getRequestDispatcher(url);
 			successView.forward(req, res);
+			}
+			else{
+				req.setAttribute("itemNotFound", dateItemVO);
+				String url = "/front_end/dateitem/list_buyer_future.jsp";
+				RequestDispatcher successView = req.getRequestDispatcher(url);
+				successView.forward(req, res);	
+			}
 			
 		}
 		
@@ -156,14 +184,21 @@ public class DateItemServlet extends HttpServlet {
 						
 			Integer dateItemNo = new Integer(req.getParameter("dateItemNo").trim());
 			DateItemService dSvc = new DateItemService();
+			MemberService mSvc = new MemberService();
 			DateItemVO dateItemVO = dSvc.findByPK(dateItemNo);
-							
+			
+			//修改狀態成為取消
 			dateItemVO.setDateItemStatus(2);
 			dateItemVO.setDateItemShow(1);
 			dSvc.updateByVO(dateItemVO);
 			
+			//儲值金額返還
+			int currentPoint = mSvc.getOneMember(dateItemVO.getBuyerNo()).getMemPoint();
+			mSvc.getOneMember(dateItemVO.getBuyerNo()).setMemPoint(currentPoint+dateItemVO.getDateItemPrice());
+			
 			//分辨取消來自買方還是賣方,分別導回買賣方的歷史紀錄
 			try {
+				
 				req.setAttribute("itemCanceled", dateItemVO);
 				if (req.getParameter("fromwho").equals("buyer")){
 					String url = "/front_end/dateitem/list_buyer_history.jsp";

@@ -13,7 +13,15 @@ left:1rem;
 padding-right:4rem;
 }
 
+.fortest button{
+margin-left:1%;
+float:right;
+}
 
+.fortest .a{
+margin-left:1%;
+float:right;
+}
 
 
 </style>
@@ -166,8 +174,10 @@ padding-right:4rem;
         <button class = "btn btn-warning" data-dismiss="modal">回上一頁</button>
         
 <!--         //限制自己不能買自己的約會 -->
-       <c:if test="${dateitem.sellerNo!=member.getMemNo()}"> <a href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" 
-       type="button" class="check btn btn-primary">預定約會</a> </c:if>
+       <c:if test="${dateitem.sellerNo!=member.getMemNo()}" > 
+       <a href="" 
+       type="button" onclick="goajax('${dateitem.dateItemNo}')" data-toggle="modal" data-target="#confirm${dateitem.dateItemNo}" class="check btn btn-primary">預約</a> </c:if>
+       <input type="hidden" value="${dateItem.dateItemPrice}"/>
         
     </div>
     
@@ -178,6 +188,30 @@ padding-right:4rem;
       </div>
     </div>
 
+<!-- 確認付款與檢查儲值modal -->
+
+ <div id="confirm${dateitem.dateItemNo}" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content fortest">
+      <div class="modal-header text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">上架商品</h4>
+      </div>
+      <div class="modal-body" >
+        <p></p>
+        <p id="textshow${dateitem.dateItemNo}">價格$${dateitem.dateItemPrice}, 確定預約此約會?</p>
+      </div>
+      <div class="modal-footer">
+      <button id="" type="button" class="btn btn-warning" data-dismiss="modal">回上一頁</button>
+       <a href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" 
+       type="button" id="checkPrice${dateitem.dateItemNo}" class="check btn btn-primary">確定約會</a>
+       <input type="hidden" value="${dateItem.dateItemPrice}"/>
+        
+      </div>
+    </div>
+
+  </div>
+  </div>
  
  
  
@@ -185,13 +219,42 @@ padding-right:4rem;
  
  
  </c:forEach>       
-  
-  
+
   
 
 <%@ include file="footer.file"%>
 
 <script>
+
+<!--檢查儲值 -->
+function goajax(dateItemNo){
+// 		alert(dateItemNo);
+	    $.ajax({ 
+	        url:  'dateitem.do?action=checkCharge',
+	        type: 'POST',
+	        data: { dateItemNo:dateItemNo,
+			},
+	        success: function(response){
+// 	        	alert('success');
+	        	if(response.length<4){
+// 	        	alert('enough');					
+	        	}else{
+	        		
+// 	 =================餘額不足,把按鈕改為儲值=====================
+// 	        		alert('not enough');
+  	        		$('#textshow'+dateItemNo).html('<h1>餘額不足請儲值<h1>');	
+  	        		$('#confirm'+dateItemNo).modal('show');
+  	        		$('#checkPrice'+dateItemNo).text('前往儲值');
+  	        		$('#checkPrice'+dateItemNo).attr("href", "/front_end/charge/chargePage.jsp?from=dateitem")
+	        	}
+	        },
+	        error: function(){
+	            alert("error");
+	        }  
+	    });  	
+	};
+
+
 
 $(document).ready(function(){
 		var but1 = $('#button1');

@@ -442,6 +442,48 @@ public class DateItemJDBCDAO implements DateItemDAO_interface{
 
 		return baos.toByteArray();
 	}
+
+	@Override
+	public List<DateItemVO> getAllItems() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DateItemVO> findBySeller_future(int sellerNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DateItemVO> findBySeller_history(int sellerNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DateItemVO> findBySeller_onsale(int sellerNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DateItemVO> findByBuyer_future(int buyerNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<DateItemVO> findByBuyer_history(int buyerNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateByVO(DateItemVO dateItemVO) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

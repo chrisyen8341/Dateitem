@@ -40,6 +40,7 @@ pageContext.setAttribute("rests", rests);
     radius:15%;
     }
     
+
   </style>
 
 
@@ -84,7 +85,7 @@ pageContext.setAttribute("list",list);
 </c:if>
 
 
-<form action="dateitem.do" method=post enctype="multipart/form-data">
+<form id="formadd" action="dateitem.do" method=post enctype="multipart/form-data">
 <table class="table">
 
 <div class="row">
@@ -189,7 +190,7 @@ pageContext.setAttribute("list",list);
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">上架商品</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" >
         <p></p>
         <h2><p id="textshow">有一筆約會, 請相隔四小時以上</p></h2>
       </div>
@@ -254,7 +255,7 @@ pageContext.setAttribute("list",list);
 	 $('#godo').on('click', function(e) {
 		    e.preventDefault();
 		    $.ajax({ 
-		        url:  'dateitem.do?action=checktime',
+		        url:  'dateitem.do?action=checkTime',
 		        type: 'POST',
 		        data: { time:$('#dp').val(), 
 				},
@@ -263,9 +264,8 @@ pageContext.setAttribute("list",list);
 		        	if(time.length>2){
 		        	 $('#tryonsale').modal('show');
 	        	$('#textshow').text($('#dp').val()+'這時段已經有約會了,請相隔四小時以上');
-		        	}else{
-		        		
-		        		window.location.href = 'dateitem.do?action=insert';
+		        	}else{		        		
+		        		$('#formadd').submit();
 		        	}
 		        },
 		        error: function(){

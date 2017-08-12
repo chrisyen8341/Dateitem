@@ -15,8 +15,8 @@ import java.util.List;
 
 import javax.swing.ListModel;
 
-import com.restImg.model.RestImg;
-import com.restMember.controller.restMemberServlet;
+//import com.restImg.model.RestImg;
+//import com.restMember.controller.restMemberServlet;
 
 public class RestaurantJDBCDAO implements RestaurantDAO_Interface {
 
