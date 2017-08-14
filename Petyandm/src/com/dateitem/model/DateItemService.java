@@ -144,5 +144,18 @@ public class DateItemService {
 		dao.updateByVO(dateItemVO);
 	}
 	
+	public List<DateItemVO> getAllForChats(Integer memNo) {
+		return  dao.getAllForChats(memNo);
+	}
+	//找出約會號碼最新的約會預設秀在聊天室裡
+	public int getLastestDateItem(List<DateItemVO> list){
+		int dateItemNo=0;
+		for(DateItemVO dateItemVO:list){
+			if (dateItemVO.getDateItemNo()>dateItemNo){
+				dateItemNo= dateItemVO.getDateItemNo();
+			}
+		}		
+		return dateItemNo;		
+	}
 	
 }

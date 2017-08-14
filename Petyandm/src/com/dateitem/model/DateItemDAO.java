@@ -47,11 +47,12 @@ public class DateItemDAO implements DateItemDAO_interface{
 	private static final String FIND_BY_PK = "SELECT * FROM DATEITEM WHERE DATEITEMNO = ?";
 	private static final String GET_ALL = "SELECT * FROM DATEITEM";
 	private static final String GET_ALL_ITEMS = " SELECT * FROM DATEITEM WHERE DATEITEMSHOW = 0 ORDER BY dateItemNo DESC";
-	private static final String FINDBYBUYERFUTURE = "SELECT * FROM DATEITEM WHERE (BUYERNO = ? AND DATEITEMSTATUS =1)";
+	private static final String FINDBYBUYERFUTURE = "SELECT * FROM DATEITEM WHERE (BUYERNO = ? AND DATEITEMSTATUS =1) ";
 	private static final String FINDBYBUYERHISTORY = "SELECT * FROM DATEITEM WHERE (BUYERNO = ? AND (DATEITEMSTATUS =2 OR DATEITEMSTATUS =3 ))";
 	private static final String FINDBYSELLERFUTURE = "SELECT * FROM DATEITEM WHERE (SELLERNO = ? AND DATEITEMSTATUS =1)";
 	private static final String FINDBYSELLERHISTORY = "SELECT * FROM DATEITEM WHERE (SELLERNO = ? AND (DATEITEMSTATUS =2 OR DATEITEMSTATUS =3 ))";
 	private static final String FINDBYSELLERONSALE = "SELECT * FROM DATEITEM WHERE (SELLERNO = ? AND ( DATEITEMSTATUS = 0 and DATEITEMSHOW = 0))";
+	private static final String GETALLFORCHATS = "SELECT * FROM DATEITEM WHERE (SELLERNO = ? OR BUYERNO=?) and DATEITEMSTATUS =1";
 	
 	
 	
@@ -829,5 +830,76 @@ public class DateItemDAO implements DateItemDAO_interface{
 		}
 		return dateItemList;
 	}
+	
+	@Override
+	public List<DateItemVO> getAllForChats(int memNo) {
+		List<DateItemVO> dateItemList = new ArrayList<>();
+		PreparedStatement pstmt=null;
+		Connection con=null;
+		ResultSet rs=null;
+		
+		try {
+			con = ds.getConnection();
+			pstmt=con.prepareStatement(GETALLFORCHATS);
+			pstmt.setInt(1, memNo);
+			pstmt.setInt(2, memNo);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				DateItemVO dateItemVO=new DateItemVO();
+				dateItemVO.setDateItemNo(rs.getInt("dateItemNo"));
+				dateItemVO.setSellerNo(rs.getInt("sellerNo"));
+				dateItemVO.setRestListNo(rs.getInt("restListNo"));
+				dateItemVO.setDateItemTitle(rs.getString("dateItemTitle"));
+				dateItemVO.setDateItemImg(rs.getBytes("dateItemImg"));
+				dateItemVO.setDateItemText(rs.getString("dateItemText"));
+				dateItemVO.setDateItemTime(rs.getTimestamp("dateItemTime"));
+				dateItemVO.setDateMeetingTime(rs.getTimestamp("dateMeetingTime"));
+				dateItemVO.setDateItemLocate(rs.getString("dateItemLocate"));
+				dateItemVO.setDateItemPeople(rs.getInt("dateItemPeople"));
+				dateItemVO.setHasMate(rs.getBoolean("hasMate"));
+				dateItemVO.setDateItemPrice(rs.getInt("dateItemPrice"));
+				dateItemVO.setDateItemStatus(rs.getInt("dateItemStatus"));
+				dateItemVO.setDateItemShow(rs.getInt("dateItemShow"));
+				dateItemVO.setDateItemViewer(rs.getInt("dateItemShow"));
+				dateItemVO.setBuyerNo(rs.getInt("buyerNo"));
+				dateItemVO.setIsQRCChecked(rs.getBoolean("isQRCChecked"));
+				dateItemVO.setBuyerRep(rs.getInt("buyerRep"));
+				dateItemVO.setSellerRep(rs.getInt("SellerRep"));
+				dateItemVO.setIsInstantDate(rs.getBoolean("isInstantDate"));
+				dateItemVO.setPetNo(rs.getInt("petNo"));
+				dateItemList.add(dateItemVO);	
+				
+			}
+			
+		}  catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return dateItemList;
+	}
+	
 				
 }

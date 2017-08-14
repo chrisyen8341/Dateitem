@@ -15,6 +15,7 @@ import java.util.List;
 		List<DateItemVO> findBySeller_onsale(int sellerNo);
 		List<DateItemVO> findByBuyer_future(int buyerNo);
 		List<DateItemVO> findByBuyer_history(int buyerNo);
+		List<DateItemVO> getAllForChats(int memNo);
 		void updateByVO(DateItemVO dateItemVO);
 	}
 	
