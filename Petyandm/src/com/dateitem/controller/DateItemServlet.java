@@ -35,6 +35,30 @@ public class DateItemServlet extends HttpServlet {
 		req.setCharacterEncoding("UTF-8");
 		res.setContentType("text/html; charset=Big5");
 		String action = req.getParameter("action");
+		
+		
+		
+		
+		//賣家同一個時間內是已經有上架商品
+		if("QRC".equals(action)){	
+				try {
+					int dateItemNo = Integer.parseInt(req.getParameter("dateImteNo"));
+					DateItemService dSvc = new DateItemService();
+					DateItemVO  dateItemVO = dSvc.getOneDateItem(dateItemNo);
+					dateItemVO.setDateItemStatus(3);
+
+					
+//	                撥款的部分	
+//					MemberService mSvc = new MemberService();
+//					Member seller =  mSvc.getOneMember(dateItemVO.getSellerNo());
+//					int currentPoint = seller.getMemPoint();
+//					seller.setMemPoint(currentPoint+dateItemVO.getDateItemPrice());
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println("Parse Error");
+				}
+		}		
 
 		// 檢查是否有寵物
 		if ("check_Seller".equals(action)) { 

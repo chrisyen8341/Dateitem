@@ -154,12 +154,16 @@ public class DateItemVO implements Serializable{
 	public void setDateItemPrice(Integer dateItemPrice) {
 		this.dateItemPrice = dateItemPrice;
 	}
+	
+	public void setDateItemStatus(Integer dateItemStatus) {
+		this.dateItemStatus = dateItemStatus;
+	}
 
 	public Integer getDateItemStatus() {
 		return dateItemStatus;
 	}
 
-	public void setDateItemStatus(Integer dateItemStatus) {
+	public void dateItemVO(Integer dateItemStatus) {
 		this.dateItemStatus = dateItemStatus;
 	}
 
