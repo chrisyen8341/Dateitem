@@ -259,9 +259,9 @@ pageContext.setAttribute("list",list);
 		        type: 'POST',
 		        data: { time:$('#dp').val(), 
 				},
-		        success: function(time){
+		        success: function(count){
 		       
-		        	if(time.length>2){
+		        	if(parseInt(count)>0){
 		        	 $('#tryonsale').modal('show');
 	        	$('#textshow').text($('#dp').val()+'這時段已經有約會了,請相隔四小時以上');
 		        	}else{		        		
@@ -282,16 +282,16 @@ pageContext.setAttribute("list",list);
 	 $("#dp").datetimepicker({
 		 
 // 	 	timepicker:false,
-		 format: 'Y-m-d h:i',
+		 format: 'Y-m-d H:i',
 		 minDate:
 			 '+1970/01/02',
-		 allowTimes:[
-'11:00','11:30', '12:00', '12:30','13:00', '13:30','14:00','14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00',
-		  '19:30', '20:00', '21:00', '22:00', '23:00'
-		 ],
+// 		 allowTimes:[
+// '11:00','11:30', '12:00', '12:30','13:00', '13:30','14:00','14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00',
+// 		  '19:30', '20:00', '21:00', '22:00', '23:00'
+// 		 ],
 		 defaultDate: '17/09/01',
 //allowTimes 或者step選一個用
-// 		 step: 30 
+		 step: 30 
 		             });
 
 	  

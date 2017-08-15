@@ -60,7 +60,7 @@ float:right;
 
 <div class="popup-box chat-popup" id="qnimate">
               <div class="popup-head">
-                <div class="popup-head-left pull-left"><img src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" alt="iamgurdeeposahan"> 正在跟 小寶貝交談</div>
+                <div id="chat-title" class="popup-head-left pull-left"><img id="otherpic" src=""></div>
                       <div class="popup-head-right pull-right">
                         <div class="btn-group">
                                       <button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
@@ -82,10 +82,10 @@ float:right;
 ============= -->
 
             <div class="popup-messages">
-            <div class="append">
             
             
-            <div class="direct-chat-messages">
+            
+            <div id="append" class="direct-chat-messages">
  <!-- =============
 ============= -->                   
                     
@@ -141,7 +141,7 @@ float:right;
 ============= -->                   
                     
 
-                  </div>
+                
              </div>
 
 <!-- =============
@@ -167,15 +167,51 @@ float:right;
 <%--         		  dSvc.getAllForChats(((Member) session.getAttribute("member")).getMemNo())); %> --%>
         		  
         		
-        		<input type="hidden" id="lastestItemNo" value="${dSvc.getLastestDateItem(
+        		<input type="hidden" id="lastestItemNo" value="${dSvc.getLastestDateItemNo(
         		  dSvc.getAllForChats(member.memNo))}"/>
         		  <input type="hidden" id="memNo" value="${member.memNo}"/>
-        		  <input type="hidden" id="userName" value="${member.memSname}"/>   
+        		  
+        		    
+        		    
+<!--         		確認在對話功能中自己是買方還是賣方, 交易對象是誰     -->
+				<% Integer otherUserNo;				
+					Integer me=member.getMemNo();
+					Integer seller=(dSvc.getLastestDateItem(
+			        		  dSvc.getAllForChats(member.getMemNo()))).getSellerNo();
+					Integer buyer=(dSvc.getLastestDateItem(
+			        		  dSvc.getAllForChats(member.getMemNo()))).getBuyerNo();
+					if(me.equals(seller)){
+						otherUserNo=buyer;
+					}else{
+						otherUserNo=seller;
+					}
+					String otherUserName = memSvc.getOneMember(otherUserNo).getMemSname();
+
+				%>
+				<input type="hidden" id="otherUserNo" value="<%=otherUserNo%>"/>
+				<input type="hidden" id="otherUserName" value="<%=otherUserName%>"/>
                     
 
 
 <script>
+
+var MyPoint = "/MyEchoServer/"+$('#memNo').val()+"/"+$('#lastestItemNo').val();
+var host = window.location.host;
+var path = window.location.pathname;
+var webCtx = path.substring(0, path.indexOf('/', 1));
+var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
+
 $(document).ready(function(){
+	
+	$('#status_message').on('keyup', function(e) {
+	    if (e.which == 13) {
+	    	alert('send');
+	    	sendMessage();
+	    }
+	});
+	
+	
+	
 	$("#addClass").click(function () {
 	          $('#qnimate').addClass('popup-box-on');
 	          $("#addClass").css('visibility', 'hidden');
@@ -183,50 +219,50 @@ $(document).ready(function(){
 	          alert($('#memNo').val());
 	          var userName=$('#userName').val();
 	          var memNo=$('#memNo').val();
-			  var dateItemNo=$('#lastestItemNo').val();  
+			  var dateItemNo=$('#lastestItemNo').val();
+			  var otherUserNo=$('#otherUserNo').val();
+			  var otherUserName=$('#otherUserName').val();
+			  $("#otherpic").attr('src','ImgReader?sellerNo='+otherUserNo+'&action=memImg');
+			  var towhom="正在跟 "+otherUserName+" 進行交談";
+			  $('#chat-title').append(towhom);
 	          
-// 	          var MyPoint = "/MyWebSocketServer/"+$('#memNo').val()+"/"+$('#lastestItemNo').val();
-// 	          var host = window.location.host;
-// 	          var path = window.location.pathname;
-// 	          var webCtx = path.substring(0, path.indexOf('/', 1));
-// 	          var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
 	          
-// 	      	var statusOutput = document.getElementById("statusOutput");
-// 	      	var webSocket;
+	      	var statusOutput = document.getElementById("statusOutput");
+	      	var webSocket;
 	      	connect();
 	});
-	      	function connect() {
-	      		// 建立 websocket 物件
-	      		webSocket = new WebSocket(endPointURL);
-	      		
-	      		webSocket.onopen = function(event) {
-	      			updateStatus("WebSocket 成功連線");
-	      			document.getElementById('sendMessage').disabled = false;
-	      			document.getElementById('connect').disabled = true;
-	      			document.getElementById('disconnect').disabled = false;
-	      		};
-	      	};
-// 	      		webSocket.onmessage = function(event) {
-// 	      			if (JSON.userName==memNo){
-	      				
-// 	      			}else{
-	      				
-// 	      			}
-// 	      			var messagesArea = document.getElementById("messagesArea");
-// 	      	        var jsonObj = JSON.parse(event.data);
-// 	      	        var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
-// 	      	        messagesArea.value = messagesArea.value + message;
-// 	      	        messagesArea.scrollTop = messagesArea.scrollHeight;
-// 	      		};
 
-	      
+	
+	function connect() {
+		// 建立 websocket 物件
+		webSocket = new WebSocket(endPointURL);
+		
+		webSocket.onopen = function(event) {
+// 			document.getElementById('sendMessage').disabled = false;
+// 			document.getElementById('connect').disabled = true;
+// 			document.getElementById('disconnect').disabled = false;
+		};
 
-	      	
-// 	      	function updateStatus(newStatus) {
-// 	      		statusOutput.innerHTML = newStatus;
-// 	      	}
+		webSocket.onmessage = function(event) {
+			alert('recieved');
+	        var jsonObj = JSON.parse(event.data);
+	        
+// 	       	if(jsonObj.userName==$('#memNo').val()){
+	       		$('#append').append(jsonObj.message);
+// 	       	}
+	
+	       		
+	       
+	        var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
+// 	        messagesArea.value = messagesArea.value + message;
+// 	        messagesArea.scrollTop = messagesArea.scrollHeight;
+		};
 
-	            
+		webSocket.onclose = function(event) {
+			updateStatus("WebSocket 已離線");
+		};
+	}
+		            
 	          
 	            $("#removeClass").click(function () {
 	          $('#qnimate').removeClass('popup-box-on');
@@ -234,24 +270,19 @@ $(document).ready(function(){
 	          webSocket.close();
 	            });
 	            
-	            $("#status_message").keyup(function(event){
-	                if(event.keyCode == 13){
-	                    sendMessage();
-	                };
-	            });
+
 	            
 	            
 	        	function sendMessage() {
-	    	        var jsonObj = {"userName" : userName, "message" : message};
+	        		var message=$("#status_message").val();
+	    	        var jsonObj = {"userName" : $('#userName').val() , "message" : message};
 	    	        webSocket.send(JSON.stringify(jsonObj));
-	    	        $("#status_message").val()="";
+	    	        $('#status_message').val('');
 	        	    }
 	        	    
 	            
-	            });     
-	            
-	           
-
+	            }); 
+  	           
 </script>
 
 

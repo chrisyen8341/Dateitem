@@ -106,26 +106,37 @@ public class DateItemServlet extends HttpServlet {
 				Member member = (Member) session.getAttribute("member");
 				DateItemService dSvc = new DateItemService();
 				List<DateItemVO> list = dSvc.findBySeller_onsale(member.getMemNo());
+				List<DateItemVO> list2 = dSvc.findBySeller_future(member.getMemNo());
+				System.out.println("共有約會"+list.size());
 				String timeStr = req.getParameter("time");
 				System.out.println(timeStr);
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				try {
 					Date t1 = sdf.parse(timeStr);
-					System.out.println(t1);
-					
+					System.out.println("t1"+t1);
+					int count=0;
 					for(DateItemVO dateItemVO:list){
 						//把每個商品跟目前要上架的時間都轉成long比較是否差距四小時
 						long diff = t1.getTime()- dateItemVO.getDateMeetingTime().getTime();
-						int diffhour = (int)(diff/(60 * 60 * 1000)) % 24;
-						System.out.println("diff"+diff);
-						System.out.println("hour"+diffhour);
-						if (diffhour<4 && diffhour>-4){			
-							PrintWriter out = res.getWriter();
-							out.print(dSvc.getTimeForItem(dateItemVO.getDateMeetingTime()));
-							
+						int diffhour = (int)(diff/(60 * 60 * 1000)) ;
+						if (diffhour<4 && diffhour>-4){
+							count++;
 						}
+						
 					}
+					for(DateItemVO dateItemVO:list2){
+						//把每個商品跟目前要上架的時間都轉成long比較是否差距四小時
+						long diff = t1.getTime()- dateItemVO.getDateMeetingTime().getTime();
+						int diffhour = (int)(diff/(60 * 60 * 1000)) ;				
+						if (diffhour<4 && diffhour>-4){
+							count++;
+						}
+						
+					}					
+					PrintWriter out = res.getWriter();
+					
+					out.print(count);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					System.out.println("Parse Error");

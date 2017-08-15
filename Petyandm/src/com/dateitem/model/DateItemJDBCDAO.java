@@ -484,6 +484,12 @@ public class DateItemJDBCDAO implements DateItemDAO_interface{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public List<DateItemVO> getAllForChats(int memNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
 

@@ -17,9 +17,9 @@
     </div>
     <a href="#">
         <div class="" id="fixedbutton-talk">
-            <button class="button btn-lg btn-primary active">
+            <a href="chat.jsp" class="button btn-lg btn-primary active">
                 ¥æ©ö²á¤Ñ«Ç
-            </button>
+            </a>
         </div>
     </a>
 </div>
