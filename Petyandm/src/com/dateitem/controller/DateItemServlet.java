@@ -46,6 +46,7 @@ public class DateItemServlet extends HttpServlet {
 					DateItemService dSvc = new DateItemService();
 					DateItemVO  dateItemVO = dSvc.getOneDateItem(dateItemNo);
 					dateItemVO.setDateItemStatus(3);
+					dSvc.updateByVO(dateItemVO);
 
 					
 //	                ¼·´Úªº³¡¤À	

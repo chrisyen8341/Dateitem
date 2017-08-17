@@ -6,6 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="<%=request.getContextPath() %>/front_end/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 <link href="<%=request.getContextPath() %>/front_end/css/bootstrap.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/front_end/css/nav.css" rel="stylesheet">
@@ -22,7 +24,6 @@
 <link href="<%=request.getContextPath() %>/front_end/css/date.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/front_end/css/card.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/front_end/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" >
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="<%=request.getContextPath() %>/front_end/js/fileinput.min.js"></script>
 
 

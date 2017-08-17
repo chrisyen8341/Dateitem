@@ -62,13 +62,16 @@ float:right;
               <div class="popup-head">
                 <div id="chat-title" class="popup-head-left pull-left"><img id="otherpic" src=""></div>
                       <div class="popup-head-right pull-right">
-                        <div class="btn-group">
-                                      <button class="chat-header-button" data-toggle="dropdown" type="button" aria-expanded="false">
+                        <div class="btn-group dropdown">
+                                      <button class="chat-header-button dropdown-toggle" data-toggle="dropdown" type="button">
                                        <i class="glyphicon glyphicon-cog"></i> </button>
                                       <ul role="menu" class="dropdown-menu pull-right">
                                         <li><a href="#">Media</a></li>
+                                        <li class="divider"></li>
                                         <li><a href="#">Block</a></li>
+                                        <li class="divider"></li>
                                         <li><a href="#">Clear Chat</a></li>
+                                        <li class="divider"></li>
                                         <li><a href="#">Email Chat</a></li>
                                       </ul>
                         </div>
@@ -81,7 +84,7 @@ float:right;
 <!-- =============
 ============= -->
 
-            <div class="popup-messages">
+            <div id="scroll-area" class="popup-messages">
             
             
             
@@ -94,8 +97,8 @@ float:right;
                         <span class="direct-chat-name-left ">晨星下的記憶</span>
                       </div>
                      
-                      <img alt="iamgurdeeposahan" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="direct-chat-img-left">
-                      <div class="direct-chat-text chat-right">
+                      <img src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="direct-chat-img-left">
+                      <div class="direct-chat-text direct-chat-text-left chat-right">
                         	安安你好幾歲住哪你好嗎?
                       </div>
                       <div class="direct-chat-info clearfix">
@@ -110,7 +113,7 @@ float:right;
                       </div>
                      
                       <img alt="iamgurdeeposahan" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="direct-chat-img-left">
-                      <div class="direct-chat-text chat-right">
+                      <div class="direct-chat-text direct-chat-text-left chat-right">
                        	 你好喔安安 你再這樣我要取消約會囉
                       </div>
                       <div class="direct-chat-info clearfix">
@@ -127,7 +130,7 @@ float:right;
                       </div>
                         <img alt="iamgurdeeposahan" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="float-right direct-chat-img-right">
                       
-                      <div class="direct-chat-text chat-left ">
+                      <div class="direct-chat-text direct-chat-text-right chat-left ">
                       	  別阿大大
                       </div>
                       <div class="direct-chat-info clearfix">
@@ -169,7 +172,7 @@ float:right;
         		
         		<input type="hidden" id="lastestItemNo" value="${dSvc.getLastestDateItemNo(
         		  dSvc.getAllForChats(member.memNo))}"/>
-        		  <input type="hidden" id="memNo" value="${member.memNo}"/>
+
         		  
         		    
         		    
@@ -190,12 +193,14 @@ float:right;
 				%>
 				<input type="hidden" id="otherUserNo" value="<%=otherUserNo%>"/>
 				<input type="hidden" id="otherUserName" value="<%=otherUserName%>"/>
+				<input type="hidden" id="userNo" value="${member.memNo}"/>
+        		<input type="hidden" id="userName" value="${member.memSname}"/>
                     
 
 
 <script>
 
-var MyPoint = "/MyEchoServer/"+$('#memNo').val()+"/"+$('#lastestItemNo').val();
+var MyPoint = "/MyEchoServer/"+$('#userNo').val()+"/"+$('#lastestItemNo').val();
 var host = window.location.host;
 var path = window.location.pathname;
 var webCtx = path.substring(0, path.indexOf('/', 1));
@@ -204,8 +209,7 @@ var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
 $(document).ready(function(){
 	
 	$('#status_message').on('keyup', function(e) {
-	    if (e.which == 13) {
-	    	alert('send');
+	    if (e.which == 13) {	    	
 	    	sendMessage();
 	    }
 	});
@@ -216,15 +220,16 @@ $(document).ready(function(){
 	          $('#qnimate').addClass('popup-box-on');
 	          $("#addClass").css('visibility', 'hidden');
 	          alert($('#lastestItemNo').val());
-	          alert($('#memNo').val());
+	          alert($('#userNo').val());
 	          var userName=$('#userName').val();
-	          var memNo=$('#memNo').val();
+	          var userNo=$('#userNo').val();
 			  var dateItemNo=$('#lastestItemNo').val();
 			  var otherUserNo=$('#otherUserNo').val();
 			  var otherUserName=$('#otherUserName').val();
+			  var towhom='<img id="otherpic">正在跟 '+otherUserName+' 進行交談';
+			  
+			  $('#chat-title').html(towhom);
 			  $("#otherpic").attr('src','ImgReader?sellerNo='+otherUserNo+'&action=memImg');
-			  var towhom="正在跟 "+otherUserName+" 進行交談";
-			  $('#chat-title').append(towhom);
 	          
 	          
 	      	var statusOutput = document.getElementById("statusOutput");
@@ -238,28 +243,34 @@ $(document).ready(function(){
 		webSocket = new WebSocket(endPointURL);
 		
 		webSocket.onopen = function(event) {
-// 			document.getElementById('sendMessage').disabled = false;
-// 			document.getElementById('connect').disabled = true;
-// 			document.getElementById('disconnect').disabled = false;
+
+			//載入歷史資料
 		};
 
 		webSocket.onmessage = function(event) {
-			alert('recieved');
-	        var jsonObj = JSON.parse(event.data);
-	        
-// 	       	if(jsonObj.userName==$('#memNo').val()){
-	       		$('#append').append(jsonObj.message);
-// 	       	}
-	
-	       		
-	       
-	        var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
+			var jsonObj = JSON.parse(event.data);
+			//用
+			if (jsonObj.userNo==userNo.value){
+				//串接接到字串
+				var contentString='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-left ">'+jsonObj.userName+'</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-left"><div class="direct-chat-text direct-chat-text-left chat-right">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
+				//將字串append到畫面上
+				$('#append').append(contentString);
+				//向下捲動到最底下
+				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
+			}else{
+				var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+'</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
+				$('#append').append(contentStr);
+				//向下捲動到最底下
+				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
+			}
+	        	       
+//	        var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
 // 	        messagesArea.value = messagesArea.value + message;
 // 	        messagesArea.scrollTop = messagesArea.scrollHeight;
 		};
 
 		webSocket.onclose = function(event) {
-			updateStatus("WebSocket 已離線");
+			alert("已離線");
 		};
 	}
 		            
@@ -274,11 +285,14 @@ $(document).ready(function(){
 	            
 	            
 	        	function sendMessage() {
-	        		var message=$("#status_message").val();
-	    	        var jsonObj = {"userName" : $('#userName').val() , "message" : message};
+	        		var time= new Date().toLocaleString();
+	        		var message=$("#status_message").val().trim();
+	    	        var jsonObj = {"userNo" : $('#userNo').val() ,"userName" : $('#userName').val() , "message" : message , "time":time};
+	    	        if (message.length>1){
 	    	        webSocket.send(JSON.stringify(jsonObj));
 	    	        $('#status_message').val('');
 	        	    }
+	        	}
 	        	    
 	            
 	            }); 
