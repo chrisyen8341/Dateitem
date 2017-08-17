@@ -11,6 +11,8 @@ import java.util.List;
 		List<MsgVO> findByDateItemNo(int dateItemNo);
 		void updateMsgByVO(MsgVO msgVO);
 		List<MsgVO> getAll();
+		int unread(int memNo);
+		List<MsgVO> unreadList(int memNo);
 	}
 	
 

@@ -353,6 +353,18 @@ public class MsgJDBCDAO implements MsgDAO_interface{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public int unread(int memNo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<MsgVO> unreadList(int memNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
 

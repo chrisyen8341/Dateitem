@@ -39,7 +39,8 @@ public class MsgDAO implements MsgDAO_interface{
 	private static final String FIND_BY_PK = "SELECT * FROM MSG WHERE MSGNO = ?";
 	private static final String GET_ALL = "SELECT * FROM MSG";
 	private static final String FROMDATEITEMNO = "SELECT * FROM MSG WHERE DATEITEMNO=?";
-	
+	private static final String UNREAD = "SELECT * FROM MSG WHERE RECNO=? and MSGSTATUS=0";
+	private static final String UNREADLIST = "SELECT * FROM MSG WHERE RECNO=? and MSGSTATUS=0";
 	
 	
 	@Override
@@ -251,6 +252,52 @@ public class MsgDAO implements MsgDAO_interface{
 	}
 	
 	@Override
+	public int unread(int memNo) {
+		List<MsgVO> msgList = new ArrayList<>();
+		PreparedStatement pstmt=null;
+		Connection con=null;
+		ResultSet rs=null;
+		Integer number=0;
+		try {			
+			con = ds.getConnection();
+			pstmt=con.prepareStatement(UNREAD);
+			pstmt.setInt(1, memNo);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				number++;
+			}
+			
+		}  catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return number;
+	}
+	
+	@Override
 	public List<MsgVO> findByDateItemNo(int dateItmeNo) {
 		List<MsgVO> msgList = new ArrayList<>();
 		PreparedStatement pstmt=null;
@@ -302,6 +349,60 @@ public class MsgDAO implements MsgDAO_interface{
 			}
 		}
 		return msgList;
+	}
+	
+	@Override
+	public List<MsgVO> unreadList(int memNo) {
+		List<MsgVO> unreadList = new ArrayList<>();
+		PreparedStatement pstmt=null;
+		Connection con=null;
+		ResultSet rs=null;
+		
+		try {
+			con = ds.getConnection();
+			pstmt=con.prepareStatement(UNREADLIST);
+			pstmt.setInt(1, memNo);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				MsgVO msgVO=new MsgVO();
+				msgVO.setMsgNo(rs.getInt("msgNo"));
+				msgVO.setSendNo(rs.getInt("sendNo"));
+				msgVO.setRecNo(rs.getInt("recNo"));
+				msgVO.setDateItemNo(rs.getInt("dateItemNo"));
+				msgVO.setMsgContent(rs.getString("msgContent"));
+				msgVO.setMsgTime(rs.getTimestamp("msgTime"));
+				msgVO.setMsgStatus(rs.getInt("msgStatus"));				
+				unreadList.add(msgVO);				
+			}
+			
+		}  catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally{
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException se) {
+					se.printStackTrace(System.err);
+				}
+			}
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+			}
+		}
+		return unreadList;
 	}
 
 	@Override

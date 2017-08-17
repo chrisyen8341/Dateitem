@@ -39,6 +39,7 @@ float:right;
 <jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
 <jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
 <jsp:useBean id = "pSvc" scope="page" class="com.pet.model.PetService"/>
+<jsp:useBean id = "msgSvc" scope="page" class="com.msg.model.MsgService"/>
 <%
  	Member member = (Member) session.getAttribute("member");
 	int memNo= member.getMemNo();
@@ -136,7 +137,7 @@ float:right;
   
                     <div class="" id="fixedbutton-talk">
                         <button id="addClass" class="button btn-lg btn-primary active">
-                            開啟聊天室
+                            開啟聊天室<span id="badge" class="badge">${msgSvc.unread(member.memNo)>0 ? msgSvc.unread(member.memNo) : null}</span>
                         </button>
           				</div>
 
@@ -191,8 +192,7 @@ $(document).ready(function(){
 	$("#addClass").click(function () {
 	          $('#qnimate').addClass('popup-box-on');
 	          $("#addClass").css('visibility', 'hidden');
-// 	          alert($('#lastestItemNo').val());
-// 	          alert($('#userNo').val());
+;
 	          var userName=$('#userName').val();
 	          var userNo=$('#userNo').val();
 			  var dateItemNo=$('#lastestItemNo').val();
@@ -215,37 +215,49 @@ $(document).ready(function(){
 		webSocket = new WebSocket(endPointURL);
 		
 		webSocket.onopen = function(event) {
-
+			//在onopen裡把所有歷史訊息讀進來
 			//載入歷史資料
-		};
+			}
 
 		webSocket.onmessage = function(event) {
-			if ((event.data).valueOf() == new String("全部已讀").valueOf()){
+ 			if ((event.data).valueOf() == new String("全部已讀").valueOf()){
 			
-				$('.read').html("已讀");
-			}
-			var jsonObj = JSON.parse(event.data);	
-			if (jsonObj.userNo==userNo.value){
-				//串接接到字串
+ 				$('.read').html("已讀");
+ 			}
+
+			var jsonObj = JSON.parse(event.data);
+			if (jsonObj.history==new String("1").valueOf()){
+				
+				if (jsonObj.userNo==userNo.value){
+					//串接接到字串
+
+					var contentString='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-left ">你說 : </span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-left"><div class="direct-chat-text direct-chat-text-left chat-right">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+' &nbsp; &nbsp; &nbsp; <b><large style="color:blue;" class="read"><style color="red"></large></b></style></span></div></div>';
+					//將字串append到畫面上
+					$('#append').append(contentString);
+
+				}else{
+					var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+ '說:</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
+					$('#append').append(contentStr);
+				}
+			}else if (jsonObj.userNo==userNo.value){
+				//串接到html
 				var contentString='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-left ">你說 : </span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-left"><div class="direct-chat-text direct-chat-text-left chat-right">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+' &nbsp; &nbsp; &nbsp; <b><large style="color:blue;" class="read"><style color="red"></large></b></style></span></div></div>';
-				將字串append到畫面上
+				//將字串append到畫面上
 				$('#append').append(contentString);
 				//向下捲動到最底下
-				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 0);
+				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
 			}else{
 				var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+ '說:</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
 				$('#append').append(contentStr);
 				//向下捲動到最底下
-//				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 0);
+				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
 			}
-	        	       
-//	        var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
-// 	        messagesArea.value = messagesArea.value + message;
-// 	        messagesArea.scrollTop = messagesArea.scrollHeight;
+	        	      
 		};
 
 		webSocket.onclose = function(event) {
 			alert("已離線");
+			$('#badge').html('');
 		};
 	}
 		            

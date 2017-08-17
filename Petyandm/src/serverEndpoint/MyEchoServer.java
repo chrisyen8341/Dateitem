@@ -40,14 +40,25 @@ private final static HashMap<String, Set<Session>> roomMapping = new HashMap<>()
 		userSession.getId(), myName, room);
 		System.out.println(text);
 		
+		//載入歷史資料 用dateimteno找出該約會的所有聊天 送給進來的人
+		//在訊息中加入一個history屬性來區分新訊息與舊訊息
 		MsgService msgSvc=new MsgService();
-		List<MsgVO> getAllForThisRoom=msgSvc.findByDateItemNo(room);
-		for(MsgVO msgVO:getAllForThisRoom){
-			userSession.getBasicRemote().sendText(msgVO.getMsgContent());
-			if(msgVO.getMsgStatus()==1){
+		List<MsgVO> msgList =msgSvc.findByDateItemNo(room);
+		for (MsgVO msgVO:msgList){
+			String msgHistory=((msgVO.getMsgContent()).substring(0,msgVO.getMsgContent().length()-1))+",\"history\":\"1\"}";
+			userSession.getBasicRemote().sendText(msgHistory);
+			System.out.println(msgHistory);
+			if (msgVO.getMsgStatus()==1){
 				userSession.getBasicRemote().sendText("全部已讀");
 			}
 		}
+		
+		List<MsgVO> unreadList= msgSvc.unreadList(Integer.parseInt(myName));
+		for(MsgVO msgVO:unreadList){
+			msgVO.setMsgStatus(1);
+			msgSvc.updateMsgByVO(msgVO);
+			}
+
 		
 		if (!roomMapping.containsKey(myRoom)){
 			Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());

@@ -65,6 +65,14 @@ public class MsgService {
 		return dao.getAll();
 	}
 	
+	public Integer unread(int recNo) {
+		return dao.unread(recNo);
+	}
+	
+	public List<MsgVO> unreadList(int recNo) {
+		return dao.unreadList(recNo);
+	}
+	
 	public List<MsgVO> findByDateItemNo(Integer dateItemNo) {
 		return dao.findByDateItemNo(dateItemNo);
 	}
