@@ -23,6 +23,10 @@ margin-left:1%;
 float:right;
 }
 
+.chatlist{ 
+ text-overflow: ellipsis; 
+ overflow: hidden; 
+ } 
 
 </style>
 
@@ -37,7 +41,8 @@ float:right;
 <jsp:useBean id = "pSvc" scope="page" class="com.pet.model.PetService"/>
 <%
  	Member member = (Member) session.getAttribute("member");
-    List<DateItemVO> list = dSvc.getAllItems();
+	int memNo= member.getMemNo();
+	List<DateItemVO> list = dSvc.getAllItems();
     pageContext.setAttribute("list",list);
 %>
 
@@ -58,6 +63,8 @@ float:right;
 <!-- JSP以一個包含格線的div開始, 但是結束的</div>寫在footer裡面 -->
 
 
+<%List<DateItemVO> chatList = dSvc.getAllForChats(memNo); %>
+<% pageContext.setAttribute("chatList",chatList); %>
 <div class="popup-box chat-popup" id="qnimate">
               <div class="popup-head">
                 <div id="chat-title" class="popup-head-left pull-left"><img id="otherpic" src=""></div>
@@ -66,13 +73,10 @@ float:right;
                                       <button class="chat-header-button dropdown-toggle" data-toggle="dropdown" type="button">
                                        <i class="glyphicon glyphicon-cog"></i> </button>
                                       <ul role="menu" class="dropdown-menu pull-right">
-                                        <li><a href="#">Media</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Block</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Clear Chat</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#">Email Chat</a></li>
+                                      <c:forEach var="chat" items="${chatList}">
+                                      <li><a class="chatlist" href="#">${chat.dateItemTitle}</a></li>
+                                      <li class="divider"></li>
+                                      </c:forEach>
                                       </ul>
                         </div>
                         
@@ -94,50 +98,19 @@ float:right;
                     
                     <div class="direct-chat-msg doted-border">
                       <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name-left ">晨星下的記憶</span>
+                        <span class="direct-chat-name-left ">Petym溫馨提醒</span>
                       </div>
                      
-                      <img src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="direct-chat-img-left">
                       <div class="direct-chat-text direct-chat-text-left chat-right">
-                        	安安你好幾歲住哪你好嗎?
+                        	約會時請注意自身安全。若遇突發事故無法到場請記得先行取消約會!約會結束前請務必掃描QRC完成交易，祝您有個愉快的約會!
                       </div>
                       <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-timestamp ">14:20</span>
+                        <span class="direct-chat-timestamp "></span>
                       </div>
                       
                     </div>
 
-                    <div class="direct-chat-msg doted-border">
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name-left ">小寶貝</span>
-                      </div>
-                     
-                      <img alt="iamgurdeeposahan" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="direct-chat-img-left">
-                      <div class="direct-chat-text direct-chat-text-left chat-right">
-                       	 你好喔安安 你再這樣我要取消約會囉
-                      </div>
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-timestamp ">20:10</span>
-                      </div>
-                      
-                    </div>
-
-                        <div class="direct-chat-msg doted-border">
-
-                        
-                      <div class="direct-chat-info clearfix text-right">
-                        <span class="direct-chat-name-right ">晨星下的記憶</span>
-                      </div>
-                        <img alt="iamgurdeeposahan" src="http://bootsnipp.com/img/avatars/bcf1c0d13e5500875fdd5a7e8ad9752ee16e7462.jpg" class="float-right direct-chat-img-right">
-                      
-                      <div class="direct-chat-text direct-chat-text-right chat-left ">
-                      	  別阿大大
-                      </div>
-                      <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-timestamp ">20:40</span>
-                      </div>
-                      
-                    </div>
+                   
                     </div>
  
  <!-- =============
@@ -166,8 +139,7 @@ float:right;
                             開啟聊天室
                         </button>
           				</div>
-<%--           <% int latestNo =dSvc.getLastestDateItem( --%>
-<%--         		  dSvc.getAllForChats(((Member) session.getAttribute("member")).getMemNo())); %> --%>
+
         		  
         		
         		<input type="hidden" id="lastestItemNo" value="${dSvc.getLastestDateItemNo(
@@ -219,8 +191,8 @@ $(document).ready(function(){
 	$("#addClass").click(function () {
 	          $('#qnimate').addClass('popup-box-on');
 	          $("#addClass").css('visibility', 'hidden');
-	          alert($('#lastestItemNo').val());
-	          alert($('#userNo').val());
+// 	          alert($('#lastestItemNo').val());
+// 	          alert($('#userNo').val());
 	          var userName=$('#userName').val();
 	          var userNo=$('#userNo').val();
 			  var dateItemNo=$('#lastestItemNo').val();
@@ -248,20 +220,23 @@ $(document).ready(function(){
 		};
 
 		webSocket.onmessage = function(event) {
-			var jsonObj = JSON.parse(event.data);
-			//用
+			if ((event.data).valueOf() == new String("全部已讀").valueOf()){
+			
+				$('.read').html("已讀");
+			}
+			var jsonObj = JSON.parse(event.data);	
 			if (jsonObj.userNo==userNo.value){
 				//串接接到字串
-				var contentString='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-left ">'+jsonObj.userName+'</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-left"><div class="direct-chat-text direct-chat-text-left chat-right">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
-				//將字串append到畫面上
+				var contentString='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-left ">你說 : </span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-left"><div class="direct-chat-text direct-chat-text-left chat-right">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+' &nbsp; &nbsp; &nbsp; <b><large style="color:blue;" class="read"><style color="red"></large></b></style></span></div></div>';
+				將字串append到畫面上
 				$('#append').append(contentString);
 				//向下捲動到最底下
-				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
+				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 0);
 			}else{
-				var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+'</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
+				var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+ '說:</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
 				$('#append').append(contentStr);
 				//向下捲動到最底下
-				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
+//				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 0);
 			}
 	        	       
 //	        var message = jsonObj.userName + ": " + jsonObj.message + "\r\n";
@@ -287,7 +262,7 @@ $(document).ready(function(){
 	        	function sendMessage() {
 	        		var time= new Date().toLocaleString();
 	        		var message=$("#status_message").val().trim();
-	    	        var jsonObj = {"userNo" : $('#userNo').val() ,"userName" : $('#userName').val() , "message" : message , "time":time};
+	    	        var jsonObj = {"userNo" : $('#userNo').val() ,"userName" : $('#userName').val() , "message" : message , "time":time, "theOtherUserNo":otherUserNo.value};
 	    	        if (message.length>1){
 	    	        webSocket.send(JSON.stringify(jsonObj));
 	    	        $('#status_message').val('');

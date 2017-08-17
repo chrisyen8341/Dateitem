@@ -50,7 +50,7 @@ float:right;
 
 
 
-<%@ include file="nav.file"%>
+<%@ include file="frontEndNavBar.file"%>
 <%@ include file="sidelist.file"%>
 
 <%-- <%@ include file="page3.file"%>	 --%>
@@ -220,9 +220,9 @@ float:right;
  
  </c:forEach>       
 
-  
-
-<%@ include file="footer.file"%>
+ </div> 
+<%@ include file="chatroom.file"%>
+<%@ include file="frontEndButtom.file"%>
 
 <script>
 

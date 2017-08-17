@@ -12,6 +12,7 @@
 <jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />
 <jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
 <jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
+<jsp:useBean id = "pSvc" scope="page" class="com.pet.model.PetService"/>
 
 <%
 Member member = (Member) session.getAttribute("member");
@@ -99,7 +100,7 @@ pageContext.setAttribute("list",list);
     </div>
 </div>
 
-<%@ include file="footer.file"%>
+<%@ include file="frontEndButtom.file"%>
 
 
 

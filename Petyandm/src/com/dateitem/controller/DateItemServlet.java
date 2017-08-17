@@ -281,7 +281,7 @@ public class DateItemServlet extends HttpServlet {
 				// Send the use back to the form, if there were errors
 				
 				String dateItemTitle = req.getParameter("dateItemTitle");
-				if (dateItemTitle == null || (dateItemTitle.trim()).length() == 0) {
+				if (dateItemTitle == null || (dateItemTitle.trim()).length() == 0 ) {
 					errorMsgs.add("請輸入標題");
 					dateItemTitle = "";
 				}

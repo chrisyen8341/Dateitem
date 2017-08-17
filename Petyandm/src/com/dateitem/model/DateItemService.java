@@ -126,6 +126,10 @@ public class DateItemService {
 		return dao.findByPk(dateItemNo);
 	}
 	
+	public Integer findTheOtherMem(int memNo,int dateItemNo){
+		return dao.findTheOtherMem(memNo, dateItemNo);
+	}
+	
 	//將日期改為前端約會商品的顯示模式
 	public String getTimeForItem(Timestamp ts){
 	SimpleDateFormat sdf = new SimpleDateFormat("YYYY/MM/dd HH'點'mm分");

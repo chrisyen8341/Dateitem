@@ -16,6 +16,7 @@ import java.util.List;
 		List<DateItemVO> findByBuyer_future(int buyerNo);
 		List<DateItemVO> findByBuyer_history(int buyerNo);
 		List<DateItemVO> getAllForChats(int memNo);
+		Integer findTheOtherMem(int memNo, int dateItemNo);
 		void updateByVO(DateItemVO dateItemVO);
 	}
 	

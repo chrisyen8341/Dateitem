@@ -341,6 +341,18 @@ public class MsgJDBCDAO implements MsgDAO_interface{
 
 		return baos.toByteArray();
 	}
+
+	@Override
+	public List<MsgVO> findByDateItemNo(int dateItemNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateMsgByVO(MsgVO msgVO) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

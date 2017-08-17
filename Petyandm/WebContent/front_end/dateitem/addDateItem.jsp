@@ -47,6 +47,8 @@ pageContext.setAttribute("rests", rests);
 <!-- =======檢查上架時間是否重複========= -->
 <jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />     
 <jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
+
+
 <%
 Member member = (Member) session.getAttribute("member");
 List<DateItemVO> list = dSvc.findBySeller_history(member.getMemNo());
@@ -136,7 +138,7 @@ pageContext.setAttribute("list",list);
   
   <div class="form-group">
     <label for="lb5">請輸入約會標題</label>
-<input class="form-control" type="TEXT" name="dateItemTitle" size="45"
+<input class="form-control" maxlength="30" type="TEXT" name="dateItemTitle" size="45"
 			value="<%= (dateItemVO==null)? "" : dateItemVO.getDateItemTitle()%>" />
   </div>
  

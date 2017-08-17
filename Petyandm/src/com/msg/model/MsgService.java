@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.dateitem.model.DateItemVO;
+
 
 public class MsgService {
 
@@ -13,12 +15,11 @@ public class MsgService {
 		dao = new MsgDAO();
 	}
 	
-	public MsgVO addMsg(Integer msgNo, Integer sendNo, Integer recNo, Integer dateItemNo,
+	public MsgVO addMsg(Integer sendNo, Integer recNo, Integer dateItemNo,
 			String msgContent, Timestamp msgTime, Integer msgStatus) {
 		
 		MsgVO msgVO = new MsgVO();
 		
-		msgVO.setMsgNo(msgNo);
 		msgVO.setSendNo(sendNo);
 		msgVO.setRecNo(recNo);
 		msgVO.setDateItemNo(dateItemNo);
@@ -31,7 +32,7 @@ public class MsgService {
 	}
 	
 	
-	public MsgVO updateDateItem(Integer msgNo, Integer sendNo, Integer recNo, Integer dateItemNo,
+	public MsgVO updateMsg(Integer msgNo, Integer sendNo, Integer recNo, Integer dateItemNo,
 			String msgContent, Timestamp msgTime, Integer msgStatus){
 		
 		MsgVO msgVO = new MsgVO();
@@ -48,6 +49,10 @@ public class MsgService {
 		return msgVO;
 	}
 	
+	public void updateMsgByVO(MsgVO MsgVO){
+		dao.updateMsgByVO(MsgVO);
+	}
+	
 	public void deleteMsg(Integer msgNo) {
 		dao.delete(msgNo);
 	}
@@ -58,5 +63,9 @@ public class MsgService {
 
 	public List<MsgVO> getAll() {
 		return dao.getAll();
+	}
+	
+	public List<MsgVO> findByDateItemNo(Integer dateItemNo) {
+		return dao.findByDateItemNo(dateItemNo);
 	}
 }
