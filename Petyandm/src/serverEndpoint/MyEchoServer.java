@@ -111,8 +111,10 @@ private final static HashMap<String, Set<Session>> roomMapping = new HashMap<>()
 	}
 	
 	@OnError
-	public void onError(Session userSession, Throwable e){
+	public void onError(Session userSession, @PathParam("myRoom") Integer room,Throwable e){
 //		e.printStackTrace();
+		String myRoom = room.toString();
+		roomMapping.get(myRoom).remove(userSession);
 	}
 	
 	@OnClose

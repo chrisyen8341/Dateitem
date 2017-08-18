@@ -13,6 +13,7 @@ left:1rem;
 padding-right:4rem;
 }
 
+
 .fortest button{
 margin-left:1%;
 float:right;
@@ -70,18 +71,21 @@ float:right;
               <div class="popup-head">
                 <div id="chat-title" class="popup-head-left pull-left"><img id="otherpic" src=""></div>
                       <div class="popup-head-right pull-right">
+
                         <div class="btn-group dropdown">
+                        			
                                       <button class="chat-header-button dropdown-toggle" data-toggle="dropdown" type="button">
                                        <i class="glyphicon glyphicon-cog"></i> </button>
                                       <ul role="menu" class="dropdown-menu pull-right">
                                       <c:forEach var="chat" items="${chatList}">
-                                      <li><a class="chatlist" href="#">${chat.dateItemTitle}</a></li>
+                                      <li><a class="chatlist" onclick="changeroom(${chat.dateItemNo})">${chat.dateItemTitle}</a></li>
                                       <li class="divider"></li>
                                       </c:forEach>
                                       </ul>
                         </div>
                         
                         <button data-widget="remove" id="removeClass" class="chat-header-button pull-right" type="button"><i class="glyphicon glyphicon-arrow-left"></i></button>
+                        
                       </div>
               </div>
 
@@ -99,7 +103,7 @@ float:right;
                     
                     <div class="direct-chat-msg doted-border">
                       <div class="direct-chat-info clearfix">
-                        <span class="direct-chat-name-left ">Petym溫馨提醒</span>
+                        <span class="direct-chat-name-left ">PetYM溫馨提醒</span>
                       </div>
                      
                       <div class="direct-chat-text direct-chat-text-left chat-right">
@@ -127,9 +131,9 @@ float:right;
             <div class="popup-messages-footer" id="footer">
             <textarea id="status_message" placeholder="請輸入訊息" rows="10" cols="40" name="message"></textarea>
             <div class="btn-footer">
-            <button class="bg_none"><i class="glyphicon glyphicon-film"></i> </button>
-            <button class="bg_none"><i class="glyphicon glyphicon-camera"></i> </button>
-            <button class="bg_none"><i class="glyphicon glyphicon-paperclip"></i> </button>
+            <button class="bg_none" onclick="pulldown()"><i class="glyphicon glyphicon-hand-down"></i> </button>
+<!--             <button class="bg_none"><i class="glyphicon glyphicon-camera"></i> </button> -->
+<!--             <button class="bg_none"><i class="glyphicon glyphicon-paperclip"></i> </button> -->
             <button class="bg_none pull-right"><i class="glyphicon glyphicon-thumbs-up"></i> </button>
             </div>
             </div>
@@ -173,23 +177,32 @@ float:right;
 
 <script>
 
+// function changeroom(dateItemNo){
+// 	webSocket.onclose();
+// 	MyPoint = "/MyEchoServer/"+$('#userNo').val()+"/"+dateItemNo;
+// 	$('#qnimate').addClass('popup-box-on');
+// }
+
 var MyPoint = "/MyEchoServer/"+$('#userNo').val()+"/"+$('#lastestItemNo').val();
 var host = window.location.host;
 var path = window.location.pathname;
 var webCtx = path.substring(0, path.indexOf('/', 1));
 var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
 
+
+function pulldown() {
+	$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
+}
+
 $(document).ready(function(){
 	
 	$('#status_message').on('keyup', function(e) {
 	    if (e.which == 13) {	    	
-	    	sendMessage();
+	    	sendMessage();	   
 	    }
 	});
-	
-	
-	
-	$("#addClass").click(function () {
+		
+	$("#addClass").click(function openwindow(){
 	          $('#qnimate').addClass('popup-box-on');
 	          $("#addClass").css('visibility', 'hidden');
 ;
@@ -247,7 +260,7 @@ $(document).ready(function(){
 				//向下捲動到最底下
 				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
 			}else{
-				var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+ '說:</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+jsonObj.message+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
+				var contentStr='<div class="direct-chat-msg doted-border"><div class="direct-chat-info clearfix"><span class="direct-chat-name-right ">'+jsonObj.userName+ '說:</span></div><img src="ImgReader?sellerNo='+jsonObj.userNo+'&action=memImg" class="direct-chat-img-right"><div class="direct-chat-text direct-chat-text-right chat-left">'+(jsonObj.message== new String("<3").valueOf() ? '<img src="../images/heart-icon.png">' : jsonObj.message)+'</div><div class="direct-chat-info clearfix"><span class="direct-chat-timestamp ">'+jsonObj.time+'</span></div></div>';
 				$('#append').append(contentStr);
 				//向下捲動到最底下
 				$("#scroll-area").animate({ scrollTop: $('#scroll-area')[0].scrollHeight }, 1000);
@@ -275,13 +288,15 @@ $(document).ready(function(){
 	        		var time= new Date().toLocaleString();
 	        		var message=$("#status_message").val().trim();
 	    	        var jsonObj = {"userNo" : $('#userNo').val() ,"userName" : $('#userName').val() , "message" : message , "time":time, "theOtherUserNo":otherUserNo.value};
-	    	        if (message.length>1){
+	    	        if (message.length>0){
 	    	        webSocket.send(JSON.stringify(jsonObj));
 	    	        $('#status_message').val('');
 	        	    }
 	        	}
 	        	    
 	            
+	        	
+	        	
 	            }); 
   	           
 </script>
