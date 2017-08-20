@@ -19,7 +19,13 @@ List<DateItemVO> list = dSvc.findByBuyer_future(member.getMemNo());
 pageContext.setAttribute("list",list);
 %>
 
+<style>
+.adj-button{
+margin-right:2px;
+margin-left:2px;
+}
 
+</style>
 
 <head><title>購買紀錄</title></head>
 <body bgcolor='white'>
@@ -84,10 +90,11 @@ pageContext.setAttribute("list",list);
                         <td class="col-sm-3  text-center"><strong>${restSvc.getOneRest(dateitem.restListNo).getRestName()}</strong></td>
                         <td class="col-sm-1 ">
 			<td><a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modal-cancel" href="#">我要取消</a></td>
-			<td><a class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-app" href="#">我要申訴</a></td>
+			<td><a class="btn btn-default btn-xs" data-toggle="modal" data-target="#appeal${dateitem.dateItemNo}" href="#">我要申訴</a></td>
                         </td>
                     </tr>
 
+<!--取消的modal -->
 
 		<div id="modal-cancel" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -101,13 +108,45 @@ pageContext.setAttribute("list",list);
         <p>確定預約嗎?</p>
       </div>
       <div class="modal-footer">
-        <a type="button" class="btn btn-primary" href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=cancel_date&dateItemNo=${dateitem.dateItemNo}&fromwho=buyer">確認取消</a>
-        <button type="button" class="btn btn-warning" data-dismiss="modal">回上一頁</button>
+      <button type="button" class="btn btn-warning pull-right adj-button" data-dismiss="modal">回上一頁</button>
+        <a type="button" class="btn btn-primary pull-right adj-button" href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=cancel_date&dateItemNo=${dateitem.dateItemNo}&fromwho=buyer">確認取消</a>
+        
       </div>
     </div>
 
   </div>
   </div>
+  
+   <!-- 檢舉的modal -->
+
+ <div id="appeal${dateitem.dateItemNo}" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content fortest">
+      <div class="modal-header text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">申訴</h4>
+      </div>
+      <div class="modal-body" >
+        <p></p>
+        <input id="appImg${dateitem.dateItemNo}" type="file" class="file" name="dateItemImg" data-show-upload="false" data-show-caption="true">
+        <small id="desc1" class="form-text text-muted">請上傳申訴圖片</small>
+        <input type="text" class="form-control" id="appTitle${dateitem.dateItemNo}"/>
+        <p>請輸入檢舉原因 </p>
+        <input type="text" class="form-control" id="appText${dateitem.dateItemNo}"/>
+        <p>請詳述申訴內容 </p>
+      </div>
+      <div class="modal-footer">
+      <button id="" type="button" class="btn btn-warning pull-right adj-button" data-dismiss="modal">回上一頁</button>
+       <a href="" 
+       type="button" id="sendRep${dateitem.dateItemNo}" class="check btn btn-primary pull-right adj-button">確定送出</a>
+       <input type="hidden" value="${dateItem.dateItemNo}"/>
+        
+      </div>
+    </div>
+
+  </div>
+  </div>
+  
 <!-- ================================================取消按鈕的modal,必須在foreach內=====		 -->		
   </c:forEach>
   

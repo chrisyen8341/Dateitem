@@ -23,6 +23,15 @@ margin-left:1%;
 float:right;
 }
 
+.btn-circle {
+  display:block;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 1px solid grey;
+  
+}
+
 
 </style>
 
@@ -38,7 +47,9 @@ float:right;
 <jsp:useBean id = "msgSvc" scope="page" class="com.msg.model.MsgService"/>
 <%
 	Member member = (Member) session.getAttribute("member");
+	try{
 	int memNo= member.getMemNo();
+	}catch(Exception e){		};
     List<DateItemVO> list = dSvc.getAllItems();
     pageContext.setAttribute("list",list);
 %>
@@ -137,7 +148,11 @@ float:right;
   <div class ="main-container">
 
 <div class=" highlight">
+ <a href="" 
+type="button" class = "btn btn-xs btn-basic pull-left btn-circle" data-toggle="modal" data-target="#rep${dateitem.dateItemNo}" >檢舉</a>
+
 <h1><b>${dateitem.dateItemTitle}</b></h1>
+
 	<div class="row">
   
   
@@ -172,7 +187,7 @@ float:right;
 		</blockquote>
         
         </div>
-        </div>
+        </div>        
         <button class = "btn btn-warning" data-dismiss="modal">回上一頁</button>
         
 <!--         //限制自己不能買自己的約會 -->
@@ -185,6 +200,8 @@ float:right;
     
     <BR>
 	</div>
+	
+	 
 </div>
 </div>
       </div>
@@ -197,7 +214,7 @@ float:right;
     <div class="modal-content fortest">
       <div class="modal-header text-center">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">上架商品</h4>
+        <h4 class="modal-title">預約約會</h4>
       </div>
       <div class="modal-body" >
         <p></p>
@@ -215,7 +232,32 @@ float:right;
   </div>
   </div>
  
- 
+ <!-- 檢舉的modal -->
+
+ <div id="rep${dateitem.dateItemNo}" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content fortest">
+      <div class="modal-header text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">檢舉</h4>
+      </div>
+      <div class="modal-body" >
+        <p></p>
+        
+        <input type="text" class="form-control" id="repText${dateitem.dateItemNo}"/>
+        <p>請輸入檢舉原因 </p>
+      </div>
+      <div class="modal-footer">
+      <button id="" type="button" class="btn btn-warning" data-dismiss="modal">回上一頁</button>
+       <a href="<%=request.getContextPath() %>/front_end/dateitem/dateitem.do?action=buy_date&dateItemNo=${dateitem.dateItemNo}" 
+       type="button" id="sendRep${dateitem.dateItemNo}" class="check btn btn-primary">確定送出</a>
+       <input type="hidden" value="${dateItem.dateItemNo}"/>
+        
+      </div>
+    </div>
+
+  </div>
+  </div>
  
  
  
