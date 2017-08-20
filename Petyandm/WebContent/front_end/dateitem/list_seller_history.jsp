@@ -25,7 +25,7 @@ pageContext.setAttribute("list",list);
 <head><title>賣家紀錄</title></head>
 <body bgcolor='white'>
 
-<%@ include file="frontEndNavBar.file"%>
+<%@ include file="/front_end/frontEndNavBar.file"%>
 <%@ include file="sidelist.file"%>
 
 <!-- JSP以一個包含格線的div開始, 但是結束的</div>寫在footer裡面 -->
@@ -105,7 +105,7 @@ pageContext.setAttribute("list",list);
     </div>
 </div>
 
-<%@ include file="frontEndButtom.file"%>
+<%@ include file="/front_end/frontEndButtom.file"%>
 
 
 

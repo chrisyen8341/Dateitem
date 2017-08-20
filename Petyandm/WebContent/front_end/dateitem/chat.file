@@ -1,65 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="Big5"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page isELIgnored="false" %>
-<%@ page import="com.dateitem.model.*"%>
-<%@ page import="com.restaurant.model.*" %>
-<%@ page import="com.member.model.*" %>
-<%@ page import="java.util.*"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="BIG5"%>
 
-<style>
-blockquote>p {
-position:relative;
-left:1rem;
-padding-right:4rem;
-}
-.fortest button{
-margin-left:1%;
-float:right;
-}
-.fortest .a{
-margin-left:1%;
-float:right;
-}
-.chatlist{ 
- text-overflow: ellipsis; 
- overflow: hidden; 
- } 
-</style>
-
-<%@ include file="header.file"%>
-
-
-
-
-<jsp:useBean id = "dSvc" scope="page" class="com.dateitem.model.DateItemService" />
-<jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
-<jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
-<jsp:useBean id = "pSvc" scope="page" class="com.pet.model.PetService"/>
-<jsp:useBean id = "msgSvc" scope="page" class="com.msg.model.MsgService"/>
-<%
- 	Member member = (Member) session.getAttribute("member");
-	int memNo= member.getMemNo();
-	List<DateItemVO> list = dSvc.getAllItems();
-    pageContext.setAttribute("list",list);
-%>
-
-
-
-
-
-<head><title>約會首頁</title></head>
-<body bgcolor='white'>
-
-
-
-<%@ include file="nav.file"%>
-<%@ include file="sidelist.file"%>
-
-<%-- <%@ include file="page3.file"%>	 --%>
-
-<!-- JSP以一個包含格線的div開始, 但是結束的</div>寫在footer裡面 -->
-
-
+		
 <%List<DateItemVO> chatList = dSvc.getAllForChats(memNo); %>
 <% pageContext.setAttribute("chatList",chatList); %>
 <div class="popup-box chat-popup" id="qnimate">

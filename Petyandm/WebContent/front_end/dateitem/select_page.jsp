@@ -35,8 +35,10 @@ float:right;
 <jsp:useBean id = "memSvc" scope="page" class="com.member.model.MemberService" />
 <jsp:useBean id = "restSvc" scope="page" class="com.restaurant.model.RestaurantService"/>
 <jsp:useBean id = "pSvc" scope="page" class="com.pet.model.PetService"/>
+<jsp:useBean id = "msgSvc" scope="page" class="com.msg.model.MsgService"/>
 <%
 	Member member = (Member) session.getAttribute("member");
+	int memNo= member.getMemNo();
     List<DateItemVO> list = dSvc.getAllItems();
     pageContext.setAttribute("list",list);
 %>
@@ -50,7 +52,7 @@ float:right;
 
 
 
-<%@ include file="frontEndNavBar.file"%>
+<%@ include file="/front_end/frontEndNavBar.file"%>
 <%@ include file="sidelist.file"%>
 
 <%-- <%@ include file="page3.file"%>	 --%>
@@ -221,8 +223,11 @@ float:right;
  </c:forEach>       
 
  </div> 
-<%@ include file="chatroom.file"%>
-<%@ include file="frontEndButtom.file"%>
+<%@ include file="/front_end/frontEndButtom.file"%>
+<%@ include file="chat.file"%>
+
+
+
 
 <script>
 
