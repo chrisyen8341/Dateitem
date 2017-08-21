@@ -362,7 +362,7 @@ $(document).ready(function(){
 		var timeStr=$(this).next('input').val().trim();
 		
 		var yearStr = parseInt(timeStr.substring(0,4));
-		alert(yearStr);
+	
 		var monthStr = parseInt(timeStr.substring(5,7));
 		
 		var dayStr = parseInt(timeStr.substring(8,10));
