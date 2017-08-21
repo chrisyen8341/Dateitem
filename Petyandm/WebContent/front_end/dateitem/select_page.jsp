@@ -177,7 +177,7 @@ float:right;
                     <div class="desc">${memSvc.getOneMember(dateitem.sellerNo).getMemSname()}</div>
                     <div class="desc">${dSvc.getTimeForItem(dateitem.dateMeetingTime)}</div>
                     <div class="desc">${dateitem.dateItemLocate}</div>
-                    <div>${dateitem.dateMeetingTime} </div>
+                  
                 </div>
                 <div class="bottom">
                     <a class="btn btn-info"  data-toggle="modal" data-target="#modal-detail${dateitem.dateItemNo}" href="">

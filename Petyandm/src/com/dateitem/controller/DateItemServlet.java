@@ -184,33 +184,34 @@ public class DateItemServlet extends HttpServlet {
 			DateItemService dSvc = new DateItemService();
 			DateItemVO dateItemVO = dSvc.findByPK(dateItemNo);
 			
-//			再次檢查該商品是否還沒被購買
-			if(dateItemVO.getDateItemShow()==0&&
-					dateItemVO.getDateItemStatus()==0){
-							
-			dateItemVO.setBuyerNo(buyerNo);
-			dateItemVO.setDateItemStatus(1);
-			dateItemVO.setDateItemShow(1);
-			dSvc.updateByVO(dateItemVO);
-			
-			//扣款
-			int currentPoint = member.getMemPoint();
-			member.setMemPoint(currentPoint-dateItemVO.getDateItemPrice());
-						
+			//call另一個類別中 執行續安全的方法:購買
+			BuyDateItem buyDateItem = new BuyDateItem();
+			Boolean result= buyDateItem.buyAItem(buyerNo, dateItemVO);
 			//把剛剛購買的物件setAttribute,並轉購買紀錄檢視
-			req.setAttribute("itemPurchased", dateItemVO);
-			String url = "/front_end/dateitem/list_buyer_future.jsp";
-			RequestDispatcher successView = req.getRequestDispatcher(url);
-			successView.forward(req, res);
-			}
-			else{
-				req.setAttribute("itemNotFound", dateItemVO);
+			if (result==true){
+				req.setAttribute("itemPurchased", dateItemVO);
 				String url = "/front_end/dateitem/list_buyer_future.jsp";
 				RequestDispatcher successView = req.getRequestDispatcher(url);
-				successView.forward(req, res);	
-			}
-			
+				successView.forward(req, res);
+				}else{
+					req.setAttribute("itemNotFound", dateItemVO);
+					String url = "/front_end/dateitem/list_buyer_future.jsp";
+					RequestDispatcher successView = req.getRequestDispatcher(url);
+					successView.forward(req, res);	
+				}
 		}
+				
+				
+			
+			
+			
+
+			
+						
+			
+
+		
+		
 		
 		//取消一個商品
 		if("cancel_date".equals(action)){
