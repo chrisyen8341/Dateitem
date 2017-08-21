@@ -65,7 +65,7 @@ pageContext.setAttribute("list",list);
 
 
 
-<%@ include file="nav.file"%>
+<%@ include file="/front_end/frontEndNavBar.file"%>
 <%@ include file="sidelist.file"%>
 
 
@@ -423,5 +423,5 @@ pageContext.setAttribute("list",list);
     </script>
 
 
-<%@ include file="footer.file"%>
+<%@ include file="/front_end/frontEndButtom.file"%>
 

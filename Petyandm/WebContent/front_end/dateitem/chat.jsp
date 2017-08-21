@@ -60,8 +60,13 @@ float:right;
 <!-- JSP以一個包含格線的div開始, 但是結束的</div>寫在footer裡面 -->
 
 
-<%List<DateItemVO> chatList = dSvc.getAllForChats(memNo); %>
-<% pageContext.setAttribute("chatList",chatList); %>
+<%
+try{
+List<DateItemVO> chatList = dSvc.getAllForChats(memNo); 
+pageContext.setAttribute("chatList",chatList);
+}catch(Exception e ){};%>
+
+<c:if test="${not empty chatlist}">
 <div class="popup-box chat-popup" id="qnimate">
               <div class="popup-head">
                 <div id="chat-title" class="popup-head-left pull-left"><img id="otherpic" src=""></div>
@@ -72,6 +77,7 @@ float:right;
                                       <button class="chat-header-button dropdown-toggle" data-toggle="dropdown" type="button">
                                        <i class="glyphicon glyphicon-cog"></i> </button>
                                       <ul role="menu" class="dropdown-menu pull-right">
+                                                     
                                       <c:forEach var="chat" items="${chatList}">
                                       <li><a class="chatlist" onclick="changeroom(${chat.dateItemNo})">${chat.dateItemTitle}</a></li>
                                       <li class="divider"></li>
@@ -169,7 +175,7 @@ float:right;
         		<input type="hidden" id="userName" value="${member.memSname}"/>
                     
 
-
+				</c:if>
 <script>
 
 var MyPoint = "/MyEchoServer/"+$('#userNo').val()+"/"+$('#lastestItemNo').val();

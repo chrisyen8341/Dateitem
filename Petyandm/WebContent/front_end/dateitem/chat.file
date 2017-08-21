@@ -1,8 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="BIG5"%>
 
 		
-<%List<DateItemVO> chatList = dSvc.getAllForChats(member.getMemNo()); %>
-<% pageContext.setAttribute("chatList",chatList); %>
+<%
+try{
+List<DateItemVO> chatList = dSvc.getAllForChats(member.getMemNo()); 
+pageContext.setAttribute("chatList",chatList);
+System.out.println("size:"+chatList.size());
+}catch(Exception e ){};%>
+
+<c:if test="${not empty chatList}">
 <div class="popup-box chat-popup" id="qnimate">
               <div class="popup-head">
                 <div id="chat-title" class="popup-head-left pull-left"><img id="otherpic" src=""></div>
@@ -235,3 +241,5 @@ window.onbeforeunload = function(){
 	}
   	           
 </script>
+
+</c:if>
