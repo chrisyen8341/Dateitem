@@ -162,11 +162,9 @@ margin-left:2px;
                 </tbody>
             </table>
         </div>
-    </div>
-</div>
 
 
-<%@ include file="/front_end/frontEndButtom.file"%>
+<%@ include file="/front_end/frontEndButtomFixed.file"%>
 
 
 

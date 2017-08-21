@@ -25,6 +25,8 @@
 <link href="<%=request.getContextPath() %>/front_end/css/card.css" rel="stylesheet">
 <link href="<%=request.getContextPath() %>/front_end/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" >
 <script src="<%=request.getContextPath() %>/front_end/js/fileinput.min.js"></script>
+<script src="<%=request.getContextPath() %>/front_end/js/jquery.syotimer.js"></script>
+<script src="<%=request.getContextPath() %>/front_end/js/syotimer.lang.js"></script>
 
 
  <link href="<%=request.getContextPath() %>/front_end/css/jquery.datetimepicker.css" rel="stylesheet" type="text/css">

@@ -105,7 +105,7 @@ pageContext.setAttribute("list",list);
     </div>
 </div>
 
-<%@ include file="/front_end/frontEndButtom.file"%>
+<%@ include file="/front_end/frontEndButtomFixed.file"%>
 
 
 

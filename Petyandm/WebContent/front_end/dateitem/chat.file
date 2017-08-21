@@ -206,8 +206,7 @@ $(document).ready(function(){
 			}
 	        	      
 		};
-		webSocket.onclose = function(event) {
-			alert("¤wÂ÷½u");
+		webSocket.onclose = function(event) {			
 			$('#badge').html('');
 		};
 	}

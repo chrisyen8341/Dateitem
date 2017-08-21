@@ -7,22 +7,43 @@
 <%@ page import="java.util.*"%>
 
 <style>
+
+/* @font-face { */
+/*     font-family: clock; */
+/*     src: url(../fonts/digital-7.ttf); */
+/* } */
+
+/* @font-face { */
+/*     font-family: led; */
+/*     src: url(../fonts/led_real.ttf); */
+/*     font-weight: normal; */
+/*     font-style: normal; */
+/* } */
+
+@font-face {
+    font-family: DJB;
+    src: url(../fonts/DJB.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+
+
 blockquote>p {
 position:relative;
 left:1rem;
 padding-right:4rem;
 }
-
 .fortest button{
 margin-left:1%;
 float:right;
 }
-
 .fortest .a{
 margin-left:1%;
 float:right;
 }
-
 .btn-circle {
   display:block;
   height: 20px;
@@ -32,6 +53,39 @@ float:right;
   
 }
 
+.syotimer{
+	font-family: 'DJB';
+	padding:3px;
+    text-align: center;
+ 	right:10px;
+    margin: 0px auto 0;
+    padding: 0 0 10px;
+ 
+/*     border-bottom: 2px solid #80a3ca; */
+}
+.syotimer .syotimer-cell{
+    display: inline-block;
+    margin: 0 5px;
+ 
+    width: 100px;
+/*      background: url(../images/timer.png) no-repeat 0 0;  */
+	background-color:#6fffd5;
+
+}
+.syotimer .syotimer-cell .syotimer-cell_value{
+    font-size: 50px;
+    color: #80a3ca;
+ 	font-family: 'DJB';
+    height: 100px;
+    line-height: 100px;
+ 
+    margin: 0 0 5px;
+}
+.syotimer .syotimer-cell {
+    font-family: 'DJB';
+    font-size: 20px;
+    text-transform: uppercase;
+}
 
 </style>
 
@@ -123,6 +177,7 @@ float:right;
                     <div class="desc">${memSvc.getOneMember(dateitem.sellerNo).getMemSname()}</div>
                     <div class="desc">${dSvc.getTimeForItem(dateitem.dateMeetingTime)}</div>
                     <div class="desc">${dateitem.dateItemLocate}</div>
+                    <div>${dateitem.dateMeetingTime} </div>
                 </div>
                 <div class="bottom">
                     <a class="btn btn-info"  data-toggle="modal" data-target="#modal-detail${dateitem.dateItemNo}" href="">
@@ -139,9 +194,11 @@ float:right;
 <div id="modal-detail${dateitem.dateItemNo}" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
 
+
     <!-- Modal content-->
     <div class="modal-content">
-    
+    <div id="simple-timer${dateItem.dateItemNo}" class="simple-timer"  style="color:black;" ></div>
+    <input type="hidden" class="stime" value="${dateitem.dateMeetingTime}"/>
     
       <div class="modal-header">
   
@@ -264,15 +321,14 @@ type="button" class = "btn btn-xs btn-basic pull-left btn-circle" data-toggle="m
  
  </c:forEach>       
 
- </div> 
+ 
 <%@ include file="/front_end/frontEndButtom.file"%>
 <%@ include file="chat.file"%>
 
 
-
+</div> 
 
 <script>
-
 <!--檢查儲值 -->
 function goajax(dateItemNo){
 // 		alert(dateItemNo);
@@ -300,16 +356,49 @@ function goajax(dateItemNo){
 	        }  
 	    });  	
 	};
-
-
-
 $(document).ready(function(){
+
+	$('.simple-timer').each(function(){
+		var timeStr=$(this).next('input').val().trim();
+		
+		var yearStr = parseInt(timeStr.substring(0,4));
+		alert(yearStr);
+		var monthStr = parseInt(timeStr.substring(5,7));
+		
+		var dayStr = parseInt(timeStr.substring(8,10));
+		
+		var hourStr = parseInt(timeStr.substring(11,13));
+		var minuteStr= parseInt(timeStr.substring(14,16));
+		$(this).syotimer({
+		    year: yearStr,
+		    month: monthStr,
+		    day: dayStr,
+		    hour: hourStr,
+		    minute: minuteStr,
+		    effectType: 'opacity',
+		    lang: 'eng'
+		});		
+	});
+
+
+
+// 	$('#simple-timer').syotimer({
+// 	    year: 2017,
+// 	    month: 8,
+// 	    day: 31,
+// 	    hour: 20,
+// 	    minute: 48,
+// 	    effectType: 'opacity',
+// 	});		
+	
+	
+	
+	
 		var but1 = $('#button1');
 		but1.click(function() {
 			if(this.value == 'showppl'){
 			but1.val('showpet');
 			but1.html('以寵物顯示約會')
-
 			
 		
 			$.ajax({
@@ -363,10 +452,12 @@ $(document).ready(function(){
 			} 
 			
 			
+			
+			
 		});
 });
 
-</script>
 
+</script>
 
 
