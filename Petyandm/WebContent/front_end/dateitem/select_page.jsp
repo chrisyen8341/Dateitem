@@ -29,8 +29,6 @@
 
 
 
-
-
 blockquote>p {
 position:relative;
 left:1rem;
@@ -87,6 +85,45 @@ float:right;
     text-transform: uppercase;
 }
 
+
+
+
+
+.select-style {
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    width: 200px;
+    border-radius: 3px;
+    overflow: hidden;
+    background-color: #fff;
+
+    background: #fff url("http://www.scottgood.com/jsg/blog.nsf/images/arrowdown.gif") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+
+
+th, td {
+    padding: 15px;
+    text-align: right;
+}
+
+
 </style>
 
 <%@ include file="header.file"%>
@@ -104,7 +141,7 @@ float:right;
 	try{
 	int memNo= member.getMemNo();
 	}catch(Exception e){		};
-    List<DateItemVO> list = dSvc.getAllItems();
+    List<DateItemVO> list = dSvc.getAllWithOutImg();
     pageContext.setAttribute("list",list);
 %>
 
@@ -112,7 +149,9 @@ float:right;
 
 
 
-<head><title>約會首頁</title></head>
+<head><title>約會首頁</title>
+<link href="<%=request.getContextPath() %>/front_end/css/modern-business.css" rel="stylesheet" type="text/css">
+</head>
 <body bgcolor='white'>
 
 
@@ -125,36 +164,119 @@ float:right;
 <!-- JSP以一個包含格線的div開始, 但是結束的</div>寫在footer裡面 -->
 
 <div class="col-xd-12 col-sm-10  main-page-show">
-<div class="col-sm-10 col-sm-offset-1">
+<div class="row">
 
-<span >
- <select class="w3-select selectpicker " name="option">
-    <option value="" disabled selected>請選擇地點</option>
-    <option value="1">Option 1</option>
-    <option value="2">Option 2</option>
-    <option value="3">Option 3</option>
-  </select>
-  <select class="w3-select selectpicker" name="option">
-    <option value="" disabled selected>請選擇主人</option>
-    <option value="1">Option 1</option>
-    <option value="2">Option 2</option>
-    <option value="3">Option 3</option>
-  </select>
-  <select class="w3-select selectpicker" name="option">
-    <option value="" disabled selected>請選擇寵物</option>
-    <option value="1">Option 1</option>
-    <option value="2">Option 2</option>
-    <option value="3">Option 3</option></select>
+			<div class="col-xd-12 col-sm-3"> 
+			<a href="#" class="list-group-item"
+				data-toggle="collapse" data-target="#search" data-parent="#menu">約會商品查詢
+					<span class="glyphicon glyphicon-triangle-bottom pull-right"></span>
+			</a>
+				<div id="search" class="sublinks collapse">
+					<a href="#" class="list-group-item small" data-toggle="modal"
+						data-target="#searchSpec">以條件搜尋 </a>		
+					<a class="list-group-item small"
+						href='<%=request.getContextPath()%>/front_end/dateitem/googleMapQuery.jsp'>以地圖搜尋</a>
+				</div>
+			</div>
+
+			<div class="col-xd-12 col-sm-2"> 
+				<button class="btn btn-lg btn-default" id="button1" value="showppl">以主人顯示約會</button>
+			</div>
+
+
 	
-  <button class="btn btn-lg btn-warning glyphicon glyphicon-search"> </button>
-  <button class="btn btn-default" id="button1" value="showppl" >以主人顯示約會</button>
 
- </span> 
+
+			<!-- 複合查詢Modal content-->
+			<div class="modal fade" id="searchSpec" role="dialog">
+				<div class="modal-dialog">
+
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">查詢約會商品</h4>
+						</div>
+						<div class="modal-body">
+
+							<Form
+								action="<%=request.getContextPath()%>/front_end/dateitem/dateitem.do"
+								method="post">
+								<table>
+									<input type="hidden" name="action"
+										value="listDItems_ByCompositeQuery">
+
+									<tr>
+										<td class="title">約會日期</td>
+										<td><input type="text" id="dateMeetingTime"
+											name="dateMeetingTime"></td>
+									</tr>
+
+									<tr>
+										<td class="title">會員暱稱</td>
+										<td><input type="text" id="memSname"
+											name="memSname"></td>
+									</tr>
+									
+									<tr>
+										<td class="title">寵物姓名</td>
+										<td><input type="text" id="petName"
+											name="petName"></td>
+									</tr>
+									
+
+									<tr>
+										<td class="title">會員性別:</td>
+										<td>
+											<div class="select-style">
+												<select class="filter" name="memGender">
+													<option value="" disabled selected>請選擇主人性別</option>
+													<option value="">皆可</option>
+													<option value="0">男</option>
+													<option value="1">女</option>
+													<option value="2">不願透露</option>
+												</select>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+										<td class="title">寵物性別</td>
+										<td>
+											<div class="select-style">
+												<select class="filter" name="petKind">
+													<option value="" disabled selected>請選擇寵物</option>
+													<option value="">皆可</option>
+													<option value="狗">狗</option>
+													<option value="貓">貓</option>
+													<option value="其他">其他</option>
+												</select>
+											</div>
+										</td>
+									</tr>
+
+								</table>
+
+								<input type="submit" value="查詢" class="btn btn-primary">
+
+							</Form>
+						</div>
+
+
+					</div>
+
+				</div>
+			</div>
+
 
  </div>
  
-
-  <c:forEach var="dateitem" items="${list}">
+<%@ include file="pages/page1.file" %> 
+  <div> 
+  <c:forEach var="dateitem" items="${list}" varStatus="s" begin="<%=pageIndex%>" end="<%=pageIndex+rowsPerPage-1%>">
+          <c:if test="${s.index%3==0}"> 
+			<div class="row">
+			</c:if>
+          
           <div class="col-sm-4 ">
             <div class="bg-color">
             <div class="card hovercard">
@@ -319,10 +441,13 @@ type="button" class = "btn btn-xs btn-basic pull-left btn-circle" data-toggle="m
   </div>
  
  
+ 			<c:if test="${s.index%3==2}"> 
+				</div>
+			 </c:if>
  
- 
- </c:forEach>       
-
+ </c:forEach>
+ </div>       
+<%@ include file="pages/page2.file" %> 
  
 <%@ include file="/front_end/frontEndButtom.file"%>
 <%@ include file="chat.file"%>
@@ -461,5 +586,17 @@ $(document).ready(function(){
 
 
 </script>
+		<script>
+			$(function() {
 
+				$("#dateMeetingTime").datetimepicker({
+					format : 'Y-m-d',
+					timepicker : false,
+					mindate : 0,
+				});
 
+			});
+		</script>
+</body>
+
+</html>
