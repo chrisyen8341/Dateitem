@@ -17,7 +17,7 @@ public class jdbcUtil_CompositeQuery_DateItem {
 
 		if ("empNo".equals(columnName)||"memGender".equals(columnName)||"petGender".equals(columnName)|| "memNo".equals(columnName)||"memGender".equals(columnName)) // 用於其他
 			aCondition = columnName + "=" + value;
-		else if ("empName".equals(columnName) || "empId".equals(columnName)|| "empName".equals(columnName)
+		else if ("petName".equals(columnName) || "empId".equals(columnName)|| "empName".equals(columnName)
 				|| "empJob".equals(columnName)|| "memId".equals(columnName)|| "memSname".equals(columnName)
 				|| "memEmail".equals(columnName)|| "petKind".equals(columnName)) // 用於varchar
 			aCondition = columnName + " like '%" + value + "%'";

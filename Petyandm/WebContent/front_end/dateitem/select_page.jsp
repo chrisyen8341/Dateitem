@@ -118,10 +118,6 @@ float:right;
 }
 
 
-th, td {
-    padding: 15px;
-    text-align: right;
-}
 
 
 </style>
